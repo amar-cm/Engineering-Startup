@@ -459,9 +459,18 @@
       transition: filter 0.3s ease;
     }
     .gallery img:hover { filter: brightness(1) saturate(1); }
+    /* Featured 3: one wide hero + two equal below */
+    .gallery-featured { grid-template-columns: 1fr 1fr; }
+    .gallery-featured .gallery-hero {
+      grid-column: 1 / -1;
+      aspect-ratio: 16/7;
+    }
+    .gallery-featured img:not(.gallery-hero) { aspect-ratio: 4/3; }
     @media (max-width: 640px) {
       .gallery-3col { grid-template-columns: repeat(2, 1fr); }
       .gallery-span2 { grid-column: span 1; }
+      .gallery-featured { grid-template-columns: 1fr; }
+      .gallery-featured .gallery-hero { grid-column: 1; aspect-ratio: 4/3; }
     }
 
     /* ─── PROCESS ─── */
@@ -834,13 +843,10 @@
           </div>
 
           <div>
-            <div class="gallery gallery-3col" aria-label="Industrial design project gallery">
-              <img src="images/gallery2/ad1.png"        alt="Industrial enclosure design — project view 1"   width="400" height="300" loading="lazy" />
-              <img src="images/gallery2/ad_2.png"       alt="Industrial enclosure design — project view 2"   width="400" height="300" loading="lazy" />
-              <img src="images/gallery2/ad_3.png"       alt="Industrial enclosure design — project view 3"   width="400" height="300" loading="lazy" />
-              <img src="images/gallery2/IMG_5889.jpg"   alt="Completed sheet metal enclosure installation 1" width="400" height="300" loading="lazy" />
-              <img src="images/gallery2/IMG_5890.jpg"   alt="Completed sheet metal enclosure installation 2" width="400" height="300" loading="lazy" />
-              <img src="images/gallery2/IMG_5891.jpg"   alt="Completed sheet metal enclosure installation 3" width="400" height="300" loading="lazy" />
+            <div class="gallery gallery-featured" aria-label="Industrial design project gallery">
+              <img src="images/gallery2/IMG_5889.jpg" alt="Completed sheet metal enclosure installation 1" width="800" height="350" loading="lazy" class="gallery-hero" />
+              <img src="images/gallery2/IMG_5890.jpg" alt="Completed sheet metal enclosure installation 2" width="400" height="300" loading="lazy" />
+              <img src="images/gallery2/IMG_5891.jpg" alt="Completed sheet metal enclosure installation 3" width="400" height="300" loading="lazy" />
             </div>
           </div>
         </div>
@@ -978,16 +984,13 @@
           </div>
 
           <div>
-            <div class="gallery gallery-3col" aria-label="Automotive services project gallery">
-              <img src="images/gallery4/IMG_5775.jpg"                                    alt="Automotive service — vehicle 1"  width="400" height="300" loading="lazy" />
-              <img src="images/gallery4/IMG_5878.jpg"                                    alt="Automotive service — vehicle 2"  width="400" height="300" loading="lazy" />
-              <img src="images/gallery4/IMG_5881.jpg"                                    alt="Automotive bodywork detail"       width="400" height="300" loading="lazy" />
-              <img src="images/gallery4/IMG_5882.jpg"                                    alt="Automotive performance build"     width="400" height="300" loading="lazy" />
-              <img src="images/gallery4/IMG_5883.jpg"                                    alt="Custom vehicle modification"      width="400" height="300" loading="lazy" />
-              <img src="images/gallery4/IMG_5885.jpg"                                    alt="Automotive service in progress"   width="400" height="300" loading="lazy" />
-              <img src="images/gallery4/03F368F7-C314-46D1-82CD-A92955C20574.jpg"        alt="Vehicle detail work"              width="400" height="300" loading="lazy" class="gallery-span2" style="aspect-ratio:2/1;" />
-              <img src="images/gallery4/6C11210D-7B58-4A3E-80FB-0503DA55B3EE.jpg"        alt="Automotive project — exterior"    width="400" height="300" loading="lazy" />
-              <img src="images/gallery4/781A6DA6-1177-403D-97E0-9EFE677D91C7.jpg"        alt="Automotive project — finished"    width="400" height="300" loading="lazy" />
+            <div class="gallery gallery-2col" aria-label="Automotive services project gallery">
+              <img src="images/gallery4/IMG_5883.jpg" alt="Classic Chevrolet SS on lift"         width="600" height="450" loading="lazy" />
+              <img src="images/gallery4/IMG_5775.jpg" alt="Motorcycle — blue street bike"        width="600" height="450" loading="lazy" />
+              <img src="images/gallery4/IMG_5885.jpg" alt="Engine work — torch on engine block"  width="600" height="450" loading="lazy" />
+              <img src="images/gallery4/IMG_5878.jpg" alt="Sport bike being loaded on trailer"   width="600" height="450" loading="lazy" />
+              <img src="images/gallery4/IMG_5881.jpg" alt="Engine disassembly — heart surgery"   width="600" height="450" loading="lazy" />
+              <img src="images/gallery4/IMG_5882.jpg" alt="Engine block inspection"              width="600" height="450" loading="lazy" />
             </div>
           </div>
         </div>
