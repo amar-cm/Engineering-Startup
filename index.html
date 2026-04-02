@@ -1,31 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="color-scheme: dark;">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Kazimoto Engineering — Custom sheet metal enclosures, advanced defense systems, and full-spectrum automotive solutions. Engineered for precision, durability, and performance." />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Kazimoto Engineering — Custom sheet metal enclosures, advanced protective systems, and full-spectrum automotive solutions. Precision-engineered for performance." />
   <title>Kazimoto Engineering — Engineering the Extraordinary</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <style>
+    /* ─── RESET ─── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    img, video { display: block; max-width: 100%; }
 
+    /* ─── TOKENS ─── */
     :root {
-      --black: #000000;
-      --orange: #ED9900;
-      --orange-dim: rgba(237,153,0,0.15);
-      --orange-glow: rgba(237,153,0,0.35);
-      --white: #FFFFFF;
-      --gray: #1a1a1a;
-      --gray-mid: #2a2a2a;
-      --gray-light: #888;
-      --text-muted: #aaa;
+      --black:   #000000;
+      --orange:  #ED9900;
+      --white:   #FFFFFF;
+      --dim:     #0a0a0a;
+      --surface: #111111;
+      --border:  rgba(255,255,255,0.08);
+      --muted:   #777777;
+      --subtle:  #444444;
+      --font-display: 'Bebas Neue', sans-serif;
+      --font-body:    'Barlow', sans-serif;
+      --nav-h: 68px;
+      --max: 1280px;
+      --gutter: clamp(1.25rem, 5vw, 4rem);
     }
 
-    html { scroll-behavior: smooth; }
+    /* ─── BASE ─── */
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+    }
+    body {
+      font-family: var(--font-body);
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+      line-height: 1.6;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-    /* ─── SKIP LINK (Accessibility) ─── */
+    /* ─── SKIP LINK ─── */
     .skip-link {
       position: absolute;
       top: -100px;
@@ -37,1246 +58,1119 @@
       font-size: 0.9rem;
       z-index: 9999;
       text-decoration: none;
-      transition: top 0.2s;
+      transition: top 0.2s ease;
     }
     .skip-link:focus { top: 1rem; }
 
-    body {
-      font-family: 'Barlow', sans-serif;
-      background: var(--black);
-      color: var(--white);
-      overflow-x: hidden;
-      cursor: default;
+    /* ─── UTILITY ─── */
+    .container {
+      width: 100%;
+      max-width: var(--max);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
     }
-
-    /* ─── FOCUS STATES (Accessibility) ─── */
-    :focus-visible {
-      outline: 2px solid var(--orange);
-      outline-offset: 3px;
+    .visually-hidden {
+      position: absolute;
+      width: 1px; height: 1px;
+      overflow: hidden;
+      clip: rect(0,0,0,0);
+      white-space: nowrap;
     }
-    button:focus-visible,
-    a:focus-visible,
-    input:focus-visible,
-    textarea:focus-visible,
-    select:focus-visible {
-      outline: 2px solid var(--orange);
-      outline-offset: 3px;
+    .section-tag {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1.25rem;
     }
-
-    /* ─── REDUCED MOTION ─── */
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        animation-duration: 0.01ms !important;
-        transition-duration: 0.01ms !important;
-      }
-      html { scroll-behavior: auto; }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      line-height: 1;
+      letter-spacing: 0.02em;
+      text-wrap: balance;
     }
-
-    /* ─── NOISE TEXTURE OVERLAY ─── */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-      pointer-events: none;
-      z-index: 9999;
-      opacity: 0.4;
+    .section-sub {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 52ch;
+      margin-top: 0.75rem;
+      text-wrap: balance;
+    }
+    .orange-rule {
+      display: block;
+      width: 48px;
+      height: 3px;
+      background: var(--orange);
+      margin-top: 1.25rem;
     }
 
     /* ─── NAVBAR ─── */
-    nav {
+    #navbar {
       position: fixed;
       top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--black);
+      border-bottom: 1px solid var(--border);
       z-index: 1000;
-      background: rgba(0,0,0,0.95);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(237,153,0,0.2);
+      display: flex;
+      align-items: center;
+      transition: transform 0.3s ease, border-color 0.3s ease;
+    }
+    #navbar.hidden { transform: translateY(-100%); }
+    #navbar.scrolled { border-bottom-color: rgba(255,255,255,0.12); }
+    .nav-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0 5%;
-      height: 72px;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      width: 100%;
+      max-width: var(--max);
+      margin-inline: auto;
+      padding-inline: var(--gutter);
     }
-
-    nav.hidden { transform: translateY(-100%); }
-    nav.scrolled { box-shadow: 0 4px 30px rgba(237,153,0,0.1); }
-
     .nav-logo {
-      height: 48px;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: var(--white);
+    }
+    .nav-logo img {
+      height: 38px;
       width: auto;
       object-fit: contain;
-      filter: brightness(1.1);
     }
-
+    .nav-wordmark {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      letter-spacing: 0.05em;
+      line-height: 1;
+    }
     .nav-links {
       display: flex;
+      align-items: center;
       gap: 2.5rem;
       list-style: none;
     }
-
     .nav-links a {
-      font-family: 'Barlow', sans-serif;
+      font-size: 0.78rem;
       font-weight: 600;
-      font-size: 0.85rem;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: var(--text-muted);
+      color: var(--muted);
       text-decoration: none;
-      position: relative;
-      transition: color 0.2s;
+      transition: color 0.2s ease;
     }
-
-    .nav-links a::after {
-      content: '';
-      position: absolute;
-      bottom: -4px; left: 0;
-      width: 0; height: 2px;
-      background: var(--orange);
-      transition: width 0.3s ease;
+    .nav-links a:hover,
+    .nav-links a:focus-visible { color: var(--white); }
+    .nav-links a:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 4px;
+      border-radius: 2px;
     }
-
-    .nav-links a:hover { color: var(--white); }
-    .nav-links a:hover::after { width: 100%; }
-
     .nav-cta {
-      background: var(--orange);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
       color: var(--black) !important;
-      padding: 0.45rem 1.2rem;
-      font-weight: 700 !important;
-      transition: background 0.2s, transform 0.2s !important;
+      background: var(--orange);
+      padding: 0.5rem 1.1rem;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease !important;
+      touch-action: manipulation;
     }
-    .nav-cta::after { display: none !important; }
-    .nav-cta:hover { background: #ffb020 !important; transform: translateY(-1px); }
-
+    .nav-cta:hover,
+    .nav-cta:focus-visible {
+      background: var(--white);
+      color: var(--black) !important;
+    }
+    .nav-cta:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 4px;
+    }
     .nav-hamburger {
       display: none;
-      flex-direction: column;
-      gap: 5px;
+      background: none;
+      border: none;
+      color: var(--white);
       cursor: pointer;
-      padding: 4px;
+      padding: 0.5rem;
+      touch-action: manipulation;
     }
-    .nav-hamburger span {
-      display: block; width: 24px; height: 2px;
-      background: var(--white);
-      transition: all 0.3s;
+    .nav-hamburger:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 4px;
+    }
+    .nav-hamburger svg { display: block; }
+
+    /* ─── MOBILE NAV ─── */
+    @media (max-width: 768px) {
+      .nav-hamburger { display: block; }
+      .nav-links {
+        display: none;
+        position: fixed;
+        top: var(--nav-h);
+        left: 0; right: 0;
+        background: var(--black);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        border-bottom: 1px solid var(--border);
+      }
+      .nav-links.open { display: flex; }
+      .nav-links li { width: 100%; }
+      .nav-links a {
+        display: block;
+        padding: 1rem var(--gutter);
+        border-top: 1px solid var(--border);
+        font-size: 0.9rem;
+      }
+      .nav-cta {
+        margin: 1rem var(--gutter);
+        display: inline-block;
+      }
+    }
+
+    /* ─── SECTIONS BASE ─── */
+    section {
+      scroll-margin-top: var(--nav-h);
     }
 
     /* ─── HERO ─── */
     #hero {
-      min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 120px 5% 80px;
+      padding-top: var(--nav-h);
       position: relative;
       overflow: hidden;
     }
-
-    #hero::before {
-      content: '';
+    .hero-bg {
       position: absolute;
       inset: 0;
       background:
-        radial-gradient(ellipse 80% 60% at 60% 40%, rgba(237,153,0,0.06) 0%, transparent 70%),
-        repeating-linear-gradient(
-          90deg,
-          transparent,
-          transparent 80px,
-          rgba(255,255,255,0.015) 80px,
-          rgba(255,255,255,0.015) 81px
-        ),
-        repeating-linear-gradient(
-          0deg,
-          transparent,
-          transparent 80px,
-          rgba(255,255,255,0.015) 80px,
-          rgba(255,255,255,0.015) 81px
-        );
+        radial-gradient(ellipse 60% 40% at 80% 50%, rgba(237,153,0,0.04) 0%, transparent 60%),
+        linear-gradient(180deg, #000 0%, #030303 100%);
       pointer-events: none;
     }
-
-    .hero-eyebrow {
-      font-size: 0.8rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--orange);
-      font-weight: 600;
-      margin-bottom: 1.2rem;
-      opacity: 0;
-      animation: fadeUp 0.8s ease 0.2s forwards;
-    }
-
-    .hero-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(4rem, 12vw, 11rem);
-      line-height: 0.92;
-      letter-spacing: 0.02em;
-      color: var(--white);
-      max-width: 900px;
-      opacity: 0;
-      animation: fadeUp 0.9s ease 0.4s forwards;
-    }
-
-    .hero-title span {
-      color: var(--orange);
-      display: block;
-    }
-
-    .hero-subtitle {
-      font-size: clamp(1rem, 1.8vw, 1.25rem);
-      font-weight: 400;
-      color: var(--text-muted);
-      max-width: 600px;
-      line-height: 1.6;
-      margin-top: 1.8rem;
-      opacity: 0;
-      animation: fadeUp 0.9s ease 0.6s forwards;
-    }
-
-    .hero-body {
-      font-size: 1rem;
-      font-weight: 300;
-      color: #666;
-      max-width: 540px;
-      line-height: 1.7;
-      margin-top: 1rem;
-      opacity: 0;
-      animation: fadeUp 0.9s ease 0.75s forwards;
-    }
-
-    .hero-divider {
-      width: 60px; height: 3px;
-      background: var(--orange);
-      margin-top: 2rem;
-      opacity: 0;
-      animation: fadeUp 0.9s ease 0.9s forwards;
-    }
-
-    /* ─── SERVICE CARDS ─── */
-    .service-cards {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.5px;
-      margin-top: 5rem;
-      position: relative;
-    }
-
-    .service-cards::before {
-      content: '';
-      position: absolute;
-      top: -1px; left: 0; right: 0;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--orange), transparent);
-    }
-
-    .card {
-      background: #0a0a0a;
-      border-top: 3px solid transparent;
-      padding: 2.5rem 2rem;
-      position: relative;
-      overflow: hidden;
-      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards;
-    }
-
-    .card:nth-child(1) { animation-delay: 1s; }
-    .card:nth-child(2) { animation-delay: 1.15s; }
-    .card:nth-child(3) { animation-delay: 1.3s; }
-
-    .card::before {
-      content: '';
+    .hero-grid-overlay {
       position: absolute;
       inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(237,153,0,0.08), transparent 70%);
-      opacity: 0;
-      transition: opacity 0.4s;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      background-size: 80px 80px;
+      pointer-events: none;
     }
-
-    .card:hover {
-      border-top-color: var(--orange);
-      transform: translateY(-6px);
-      box-shadow: 0 20px 50px rgba(237,153,0,0.15);
-    }
-    .card:hover::before { opacity: 1; }
-
-    .card-number {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 4rem;
-      color: rgba(237,153,0,0.08);
-      position: absolute;
-      top: 1rem; right: 1.5rem;
-      line-height: 1;
-    }
-
-    .card-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.8rem;
-      letter-spacing: 0.05em;
-      color: var(--white);
-      margin-bottom: 0.8rem;
-    }
-
-    .card-text {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
-
-    .btn-outline {
-      display: inline-block;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--orange);
-      text-decoration: none;
-      border: 1px solid rgba(237,153,0,0.4);
-      padding: 0.6rem 1.4rem;
-      min-height: 44px;
-      display: inline-flex;
-      align-items: center;
-      cursor: pointer;
-      transition: background 0.25s, color 0.25s, border-color 0.25s;
+    .hero-inner {
       position: relative;
       z-index: 1;
+      padding-block: clamp(4rem, 10vh, 8rem);
     }
-
-    .btn-outline:hover {
-      background: var(--orange);
-      color: var(--black);
-      border-color: var(--orange);
-    }
-
-    .btn-solid {
-      display: inline-flex;
+    .hero-eyebrow {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
+      margin-bottom: 1.5rem;
+      display: flex;
       align-items: center;
-      justify-content: center;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.8rem;
-      font-weight: 700;
+      gap: 0.75rem;
+    }
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 32px;
+      height: 1px;
+      background: var(--orange);
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 10vw, 9rem);
+      line-height: 0.92;
+      letter-spacing: 0.01em;
+      text-wrap: balance;
+      max-width: 14ch;
+    }
+    .hero-title em {
+      font-style: normal;
+      color: var(--orange);
+    }
+    .hero-sub {
+      margin-top: 2rem;
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 56ch;
+      line-height: 1.7;
+      text-wrap: balance;
+    }
+    .hero-body {
+      margin-top: 1.25rem;
+      font-size: 1rem;
+      color: var(--muted);
+      max-width: 60ch;
+      line-height: 1.7;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+    .btn-primary {
+      display: inline-block;
+      font-size: 0.78rem;
+      font-weight: 600;
       letter-spacing: 0.12em;
       text-transform: uppercase;
       color: var(--black);
       background: var(--orange);
-      text-decoration: none;
       padding: 0.85rem 2rem;
-      min-height: 48px;
-      border: none;
-      cursor: pointer;
-      transition: background 0.2s, transform 0.2s;
+      text-decoration: none;
+      transition: background 0.2s ease, color 0.2s ease;
+      touch-action: manipulation;
     }
-    .btn-solid:hover { background: #ffb020; transform: translateY(-2px); }
-
-    /* ─── SECTIONS ─── */
-    section {
-      padding: 100px 5%;
-      position: relative;
+    .btn-primary:hover,
+    .btn-primary:focus-visible { background: var(--white); color: var(--black); }
+    .btn-primary:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 4px;
     }
-
-    section.alt-bg {
-      background: #050505;
-    }
-
-    .section-tag {
-      font-size: 0.75rem;
-      letter-spacing: 0.3em;
-      text-transform: uppercase;
-      color: var(--orange);
+    .btn-secondary {
+      display: inline-block;
+      font-size: 0.78rem;
       font-weight: 600;
-      margin-bottom: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--white);
+      background: transparent;
+      border: 1px solid var(--border);
+      padding: 0.85rem 2rem;
+      text-decoration: none;
+      transition: border-color 0.2s ease, color 0.2s ease;
+      touch-action: manipulation;
+    }
+    .btn-secondary:hover,
+    .btn-secondary:focus-visible { border-color: var(--white); }
+    .btn-secondary:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 4px;
     }
 
-    .section-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: clamp(3rem, 7vw, 6rem);
+    /* ─── CAPABILITY CARDS ─── */
+    .cards-strip {
+      background: var(--dim);
+      border-top: 1px solid var(--border);
+      padding-block: clamp(3rem, 6vw, 5rem);
+    }
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1px;
+      background: var(--border);
+    }
+    .cap-card {
+      background: var(--black);
+      padding: 2.5rem 2rem;
+      border-top: 2px solid transparent;
+      transition: border-color 0.25s ease, background 0.25s ease;
+      touch-action: manipulation;
+    }
+    .cap-card:hover { border-top-color: var(--orange); background: var(--surface); }
+    .cap-tag {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--subtle);
+      margin-bottom: 1.5rem;
+    }
+    .cap-title {
+      font-family: var(--font-display);
+      font-size: 1.8rem;
       letter-spacing: 0.03em;
       line-height: 1;
-      color: var(--white);
-      position: relative;
-      display: inline-block;
+      margin-bottom: 0.75rem;
+    }
+    .cap-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      line-height: 1.65;
+      margin-bottom: 1.75rem;
+    }
+    .cap-link {
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--orange);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      transition: gap 0.2s ease;
+    }
+    .cap-link:hover, .cap-link:focus-visible { gap: 0.9rem; }
+    .cap-link:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 4px;
+    }
+    .cap-link::after { content: '→'; }
+
+    /* ─── SECTION LAYOUT ─── */
+    .section-block {
+      padding-block: clamp(5rem, 10vw, 9rem);
+    }
+    .section-block.alt { background: var(--dim); }
+    .split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(3rem, 6vw, 6rem);
+      align-items: start;
+    }
+    .split-reverse { direction: rtl; }
+    .split-reverse > * { direction: ltr; }
+    @media (max-width: 900px) {
+      .split, .split-reverse { grid-template-columns: 1fr; direction: ltr; }
+    }
+
+    /* ─── IMAGE GALLERY ─── */
+    .gallery {
+      display: grid;
+      gap: 2px;
+    }
+    .gallery-3col { grid-template-columns: repeat(3, 1fr); }
+    .gallery-2col { grid-template-columns: repeat(2, 1fr); }
+    .gallery-span2 { grid-column: span 2; }
+    .gallery img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      aspect-ratio: 4/3;
+      filter: brightness(0.9) saturate(0.85);
+      transition: filter 0.3s ease;
+    }
+    .gallery img:hover { filter: brightness(1) saturate(1); }
+    @media (max-width: 640px) {
+      .gallery-3col { grid-template-columns: repeat(2, 1fr); }
+      .gallery-span2 { grid-column: span 1; }
+    }
+
+    /* ─── PROCESS ─── */
+    .process-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      margin-top: 2.5rem;
+      border-top: 1px solid var(--border);
+    }
+    .process-list li {
+      display: grid;
+      grid-template-columns: 3rem 1fr;
+      gap: 1rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--border);
+      align-items: baseline;
+    }
+    .process-num {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      color: var(--orange);
+      letter-spacing: 0.05em;
+    }
+    .process-text { font-size: 0.95rem; color: var(--muted); }
+    .process-text strong { color: var(--white); font-weight: 600; display: block; margin-bottom: 0.15rem; }
+
+    /* ─── WHY LIST ─── */
+    .why-list {
+      list-style: none;
+      margin-top: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .why-list li {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .why-list li::before {
+      content: '';
+      flex-shrink: 0;
+      width: 6px;
+      height: 6px;
+      background: var(--orange);
+    }
+
+    /* ─── SERVE BLOCK ─── */
+    .serve-block {
+      margin-top: 2.5rem;
+      padding: 1.5rem;
+      border-left: 3px solid var(--orange);
+      background: rgba(237,153,0,0.04);
+    }
+    .serve-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--orange);
       margin-bottom: 0.5rem;
     }
+    .serve-text { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
 
-    .section-title::after {
-      content: '';
-      display: block;
-      width: 60%;
-      height: 3px;
-      background: var(--orange);
-      margin-top: 0.4rem;
-    }
-
-    .section-subtitle {
-      font-size: clamp(1.1rem, 2vw, 1.4rem);
-      font-weight: 500;
-      color: var(--white);
-      margin: 1.2rem 0 1rem;
-    }
-
-    .section-body {
-      font-size: 1rem;
-      font-weight: 300;
-      color: var(--text-muted);
-      line-height: 1.8;
-      max-width: 740px;
-      margin-bottom: 3rem;
-    }
-
-    /* ─── IMAGE GRIDS ─── */
-    .img-grid-masonry {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      grid-template-rows: auto;
-      gap: 6px;
-      margin-bottom: 4rem;
-    }
-
-    .img-grid-masonry .img-wrap:nth-child(1) { grid-column: 1 / 3; }
-    .img-grid-masonry .img-wrap:nth-child(4) { grid-column: 2 / 4; }
-
-    .img-grid-cinema {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 6px;
-      margin-bottom: 4rem;
-    }
-
-    .img-grid-cinema .img-wrap:first-child {
-      grid-column: 1 / 3;
-      grid-row: 1 / 3;
-    }
-
-    .img-grid-auto {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 4rem;
-    }
-
-    .img-grid-auto .img-wrap:first-child { grid-column: 1 / 3; }
-    .img-grid-auto .img-wrap:nth-child(5) { grid-column: 2 / 4; }
-
-    .img-wrap {
-      overflow: hidden;
+    /* ─── DEFENSE SECTION ─── */
+    #defense {
+      background: var(--black);
       position: relative;
-      background: var(--gray);
     }
-
-    .img-wrap::after {
+    #defense::before {
       content: '';
       position: absolute;
       inset: 0;
-      background: linear-gradient(135deg, rgba(237,153,0,0.06), transparent);
-      opacity: 0;
-      transition: opacity 0.4s;
+      background: radial-gradient(ellipse 50% 70% at 30% 50%, rgba(237,153,0,0.03) 0%, transparent 60%);
+      pointer-events: none;
     }
+    .defense-inner { position: relative; z-index: 1; }
 
-    .img-wrap:hover::after { opacity: 1; }
-
-    .img-wrap img {
-      width: 100%;
-      height: 100%;
-      min-height: 220px;
-      object-fit: cover;
-      display: block;
-      transition: transform 0.6s ease;
-      filter: brightness(0.9) contrast(1.05);
-    }
-
-    .img-wrap:hover img { transform: scale(1.05); }
-
-    /* ─── PROCESS TIMELINE ─── */
-    .process {
-      margin: 3rem 0;
-    }
-
-    .process-title {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.6rem;
-      letter-spacing: 0.08em;
-      color: var(--orange);
-      margin-bottom: 2rem;
-    }
-
-    .process-steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0;
-      position: relative;
-    }
-
-    .process-steps::before {
-      content: '';
-      position: absolute;
-      top: 24px; left: 24px; right: 24px;
-      height: 1px;
-      background: linear-gradient(90deg, var(--orange), rgba(237,153,0,0.2));
-    }
-
-    .process-step {
-      padding: 0 1rem 0 0;
-      position: relative;
-    }
-
-    .step-num {
-      width: 48px; height: 48px;
-      background: var(--black);
-      border: 2px solid var(--orange);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.3rem;
-      color: var(--orange);
-      margin-bottom: 1rem;
-      position: relative;
-      z-index: 1;
-    }
-
-    .step-name {
-      font-weight: 700;
-      font-size: 0.9rem;
-      color: var(--white);
-      margin-bottom: 0.3rem;
-      letter-spacing: 0.05em;
-    }
-
-    .step-desc {
-      font-size: 0.82rem;
-      color: #666;
-      line-height: 1.5;
-    }
-
-    /* ─── WHY CHOOSE US ─── */
-    .why-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-
-    .why-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 1rem;
-      padding: 1.2rem;
-      background: rgba(237,153,0,0.04);
-      border-left: 2px solid var(--orange);
-    }
-
-    .why-icon {
-      font-size: 1.3rem;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .why-text {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    .why-text strong {
-      display: block;
-      color: var(--white);
-      font-weight: 600;
-      margin-bottom: 0.2rem;
-    }
-
-    /* ─── WHO WE SERVE ─── */
-    .serve-block {
-      background: var(--gray);
-      border-left: 3px solid var(--orange);
-      padding: 1.5rem 2rem;
-      margin: 2rem 0;
-      max-width: 700px;
-    }
-
-    .serve-block .label {
-      font-size: 0.75rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--orange);
-      margin-bottom: 0.5rem;
-    }
-
-    .serve-block p {
-      font-size: 1rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    /* ─── TWO-COL LAYOUT ─── */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 5%;
-      align-items: start;
-    }
-
-    /* ─── ABOUT + CONTACT ─── */
+    /* ─── CONTACT ─── */
     #contact {
-      background: #050505;
+      background: var(--dim);
+      border-top: 1px solid var(--border);
     }
-
     .contact-grid {
       display: grid;
-      grid-template-columns: 1fr 1.2fr;
-      gap: 6%;
-      align-items: start;
-      margin-top: 4rem;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(3rem, 6vw, 6rem);
     }
-
-    .contact-info h3 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 2rem;
-      letter-spacing: 0.05em;
-      color: var(--white);
-      margin-bottom: 1.5rem;
-    }
-
-    .contact-detail {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      margin-bottom: 1.2rem;
-    }
-
-    .contact-icon {
-      width: 44px; height: 44px;
-      background: var(--orange-dim);
-      border: 1px solid rgba(237,153,0,0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
-
-    .contact-detail a, .contact-detail span {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.95rem;
-      transition: color 0.2s;
-    }
-
-    .contact-detail a:hover { color: var(--orange); }
-
-    .social-links {
-      display: flex;
-      gap: 0.8rem;
-      margin-top: 2rem;
-    }
-
-    .social-btn {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.6rem 1.2rem;
-      border: 1px solid rgba(237,153,0,0.3);
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.82rem;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      transition: all 0.25s;
-    }
-
-    .social-btn:hover {
-      border-color: var(--orange);
-      color: var(--orange);
-      background: var(--orange-dim);
-    }
-
-    /* ─── CONTACT FORM ─── */
+    @media (max-width: 768px) { .contact-grid { grid-template-columns: 1fr; } }
     .contact-form {
-      background: #0a0a0a;
-      padding: 2.5rem;
-      border: 1px solid rgba(237,153,0,0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
     }
-
-    .contact-form h3 {
-      font-family: 'Bebas Neue', sans-serif;
-      font-size: 1.8rem;
-      letter-spacing: 0.05em;
-      color: var(--white);
-      margin-bottom: 1.8rem;
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
     }
-
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.75rem;
+    .form-field label {
+      font-size: 0.7rem;
+      font-weight: 600;
       letter-spacing: 0.15em;
       text-transform: uppercase;
-      color: #666;
-      margin-bottom: 0.5rem;
+      color: var(--muted);
     }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-      width: 100%;
-      background: var(--black);
-      border: 1px solid rgba(237,153,0,0.2);
+    .form-field input,
+    .form-field textarea {
+      background: transparent;
+      border: none;
+      border-bottom: 1px solid var(--subtle);
       color: var(--white);
-      padding: 0.8rem 1rem;
-      font-family: 'Barlow', sans-serif;
-      font-size: 0.95rem;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      padding: 0.6rem 0;
       outline: none;
-      transition: border-color 0.25s;
+      transition: border-color 0.2s ease;
+      width: 100%;
+      min-height: 44px;
+    }
+    .form-field input:focus,
+    .form-field textarea:focus { border-bottom-color: var(--orange); }
+    .form-field input:focus-visible,
+    .form-field textarea:focus-visible {
+      outline: none;
+      border-bottom-color: var(--orange);
+      box-shadow: 0 2px 0 0 var(--orange);
+    }
+    .form-field textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+    .form-submit {
+      align-self: flex-start;
+    }
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+    .contact-detail-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+    .contact-detail {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+    .contact-detail-label {
+      font-size: 0.65rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--subtle);
+    }
+    .contact-detail a,
+    .contact-detail span {
+      font-size: 0.95rem;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .contact-detail a:hover,
+    .contact-detail a:focus-visible { color: var(--white); }
+    .contact-detail a:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 4px;
     }
 
-    .form-group input:focus,
-    .form-group textarea:focus {
-      border-color: var(--orange);
+    /* ─── ABOUT BLOCK ─── */
+    .about-block {
+      padding-block: clamp(5rem, 8vw, 7rem);
+      border-bottom: 1px solid var(--border);
     }
-
-    .form-group textarea { min-height: 130px; resize: vertical; }
+    .about-text {
+      font-size: clamp(1rem, 1.5vw, 1.2rem);
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 70ch;
+      line-height: 1.75;
+    }
 
     /* ─── FOOTER ─── */
     footer {
       background: var(--black);
-      border-top: 1px solid rgba(237,153,0,0.15);
-      padding: 2rem 5%;
+      border-top: 1px solid var(--border);
+      padding-block: 3rem;
+    }
+    .footer-inner {
       display: flex;
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 1.5rem;
     }
-
-    footer p {
-      font-size: 0.82rem;
-      color: #444;
+    .footer-brand {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      letter-spacing: 0.05em;
+      color: var(--white);
     }
-
-    footer img {
-      height: 32px;
-      filter: brightness(0.6);
+    .footer-nav {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+    .footer-nav a {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--subtle);
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+    .footer-nav a:hover,
+    .footer-nav a:focus-visible { color: var(--white); }
+    .footer-nav a:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 4px;
+    }
+    .footer-copy {
+      font-size: 0.75rem;
+      color: var(--subtle);
+      width: 100%;
     }
 
     /* ─── SCROLL REVEAL ─── */
     .reveal {
       opacity: 0;
-      transform: translateY(32px);
-      transition: opacity 0.7s ease, transform 0.7s ease;
+      transform: translateY(24px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
     }
-
     .reveal.visible {
       opacity: 1;
       transform: translateY(0);
     }
-
-    /* ─── ORANGE DIVIDER ─── */
-    .divider {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(90deg, var(--orange), transparent 70%);
-      margin: 3rem 0;
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; transition: none; }
+      html { scroll-behavior: auto; }
     }
 
-    /* ─── ANIMATIONS ─── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(30px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 900px) {
-      .service-cards { grid-template-columns: 1fr; gap: 2px; }
-      .two-col { grid-template-columns: 1fr; }
-      .contact-grid { grid-template-columns: 1fr; }
-      .img-grid-masonry,
-      .img-grid-cinema,
-      .img-grid-auto { grid-template-columns: 1fr 1fr; }
-      .img-grid-masonry .img-wrap:nth-child(1),
-      .img-grid-masonry .img-wrap:nth-child(4),
-      .img-grid-cinema .img-wrap:first-child,
-      .img-grid-auto .img-wrap:first-child,
-      .img-grid-auto .img-wrap:nth-child(5) { grid-column: auto; grid-row: auto; }
-      .process-steps::before { display: none; }
-      .why-grid { grid-template-columns: 1fr; }
-      .nav-links { display: none; flex-direction: column; position: fixed; top: 72px; left: 0; right: 0; background: rgba(0,0,0,0.98); padding: 2rem; gap: 1.5rem; }
-      .nav-links.open { display: flex; }
-      .nav-hamburger { display: flex; }
-    }
-
-    @media (max-width: 600px) {
-      .img-grid-masonry,
-      .img-grid-cinema,
-      .img-grid-auto { grid-template-columns: 1fr; }
-      .hero-title { font-size: clamp(3.5rem, 15vw, 6rem); }
-      section { padding: 70px 5%; }
+    /* ─── RESPONSIVE TWEAKS ─── */
+    @media (max-width: 640px) {
+      .hero-actions { flex-direction: column; align-items: flex-start; }
+      .cards-grid { gap: 1px; }
+      .footer-inner { flex-direction: column; align-items: flex-start; }
+      .footer-nav { flex-wrap: wrap; gap: 1rem; }
     }
   </style>
 </head>
 <body>
-  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <a href="#main" class="skip-link">Skip to main content</a>
 
   <!-- ─── NAVBAR ─── -->
-  <nav id="navbar" role="navigation" aria-label="Main navigation">
-    <img src="images/gallery1/IMG_5811.jpg" alt="Kazimoto Engineering" class="nav-logo" />
-    <ul class="nav-links" id="navLinks">
-      <li><a href="#industrial">Industrial</a></li>
-      <li><a href="#defense">Defense</a></li>
-      <li><a href="#automotive">Automotive</a></li>
-      <li><a href="#contact" class="nav-cta">Contact Us</a></li>
-    </ul>
-    <button class="nav-hamburger" id="hamburger" onclick="toggleNav()" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="navLinks">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-
-  <!-- ─── SECTION 1: HERO ─── -->
-  <main id="main-content">
-  <section id="hero">
-    <div class="hero-eyebrow">Precision · Innovation · Safety</div>
-    <h1 class="hero-title">
-      Engineering<br><span>the Extraordinary</span>
-    </h1>
-    <p class="hero-subtitle">
-      Engineered for Protection. Built for Performance.<br>
-      Precision-designed sheet metal solutions for modern industry.
-    </p>
-    <p class="hero-body">
-      Kazimoto Engineering is built on precision, innovation, and uncompromising safety.
-      We design and engineer custom sheet metal enclosures for businesses, develop advanced
-      ballistic and protective systems, and deliver complete automotive solutions.
-    </p>
-    <div class="hero-divider"></div>
-
-    <!-- Service Cards -->
-    <div class="service-cards">
-      <div class="card">
-        <div class="card-number">01</div>
-        <div class="card-title">Industrial Design</div>
-        <p class="card-text">Custom sheet metal enclosures engineered for durability and precision.</p>
-        <a href="#industrial" class="btn-outline">Learn More</a>
+  <header role="banner">
+    <nav id="navbar" aria-label="Primary navigation">
+      <div class="nav-inner">
+        <a href="#hero" class="nav-logo" aria-label="Kazimoto Engineering — Home">
+          <img src="images/gallery1/IMG_5811.jpg" alt="Kazimoto Engineering logo" width="38" height="38" loading="eager" />
+          <span class="nav-wordmark">KAZIMOTO</span>
+        </a>
+        <button class="nav-hamburger" aria-expanded="false" aria-controls="nav-menu" aria-label="Open navigation menu">
+          <svg width="22" height="16" viewBox="0 0 22 16" fill="none" aria-hidden="true">
+            <rect y="0"  width="22" height="2" fill="white"/>
+            <rect y="7"  width="22" height="2" fill="white"/>
+            <rect y="14" width="22" height="2" fill="white"/>
+          </svg>
+        </button>
+        <ul class="nav-links" id="nav-menu" role="list">
+          <li><a href="#industrial">Services</a></li>
+          <li><a href="#contact">About</a></li>
+          <li><a href="#contact" class="nav-cta">Contact</a></li>
+        </ul>
       </div>
-      <div class="card">
-        <div class="card-number">02</div>
-        <div class="card-title">Defense Solutions</div>
-        <p class="card-text">Protecting today against the threats of tomorrow.</p>
-        <a href="#defense" class="btn-outline">Learn More</a>
+    </nav>
+  </header>
+
+  <!-- ─── MAIN ─── -->
+  <main id="main">
+
+    <!-- ── SECTION 1: HERO ── -->
+    <section id="hero" aria-labelledby="hero-heading">
+      <div class="hero-bg" aria-hidden="true"></div>
+      <div class="hero-grid-overlay" aria-hidden="true"></div>
+      <div class="container hero-inner">
+        <p class="hero-eyebrow" aria-hidden="true">Kazimoto Engineering</p>
+        <h1 class="hero-title" id="hero-heading">
+          ENGINEERING<br>THE <em>EXTRA&shy;ORDINARY</em>
+        </h1>
+        <p class="hero-sub">
+          Engineered for Protection. Built for Performance.<br>
+          Precision-designed solutions for modern industry.
+        </p>
+        <p class="hero-body">
+          Kazimoto Engineering is built on precision, innovation, and uncompromising safety. We design and engineer custom sheet metal enclosures for businesses, develop advanced ballistic and protective systems, and deliver complete automotive solutions.
+        </p>
+        <div class="hero-actions">
+          <a href="#industrial" class="btn-primary">Explore Our Work</a>
+          <a href="#contact" class="btn-secondary">Get in Touch</a>
+        </div>
       </div>
-      <div class="card">
-        <div class="card-number">03</div>
-        <div class="card-title">Automotive Services</div>
-        <p class="card-text">Providing more Smiles per Hour.</p>
-        <a href="#automotive" class="btn-outline">Learn More</a>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ─── SECTION 2: INDUSTRIAL ─── -->
-  <section id="industrial" class="alt-bg">
-    <div class="reveal">
-      <div class="section-tag">Section 02 — Industrial Engineering</div>
-      <h2 class="section-title">Industrial Design</h2>
-      <p class="section-subtitle">Custom Sheet Metal Enclosures, Engineered for Precision</p>
-      <p class="section-body">
-        We design custom 3D industrial solutions for sheet metal enclosures of all sizes and applications.
-        From concept to final design, our work is focused on accuracy, durability, and real-world performance.
-        With over 7 years of experience, we've developed solutions for ovens, paint booths, storage systems,
-        ventilation systems, and specialized protective environments. Every design is tailored to meet your
-        exact specifications—no off-the-shelf shortcuts.
-      </p>
-    </div>
+    <!-- ── CAPABILITY CARDS ── -->
+    <div class="cards-strip" aria-label="Service capabilities">
+      <div class="container">
+        <div class="cards-grid">
 
-    <div class="img-grid-masonry reveal">
-      <div class="img-wrap"><img src="images/gallery2/ad1.png" alt="Industrial design 1" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery2/IMG_5889.jpg" alt="Industrial design 2" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery2/ad_2.png" alt="Industrial design 3" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery2/ad_3.png" alt="Industrial design 4" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery2/IMG_5890.jpg" alt="Industrial design 5" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery2/IMG_5891.jpg" alt="Industrial design 6" loading="lazy" /></div>
-    </div>
+          <article class="cap-card reveal">
+            <p class="cap-tag">SYS-01</p>
+            <h2 class="cap-title">INDUSTRIAL DESIGN</h2>
+            <p class="cap-desc">Custom sheet metal enclosures engineered for durability and precision.</p>
+            <a href="#industrial" class="cap-link">Explore Industrial</a>
+          </article>
 
-    <div class="process reveal">
-      <div class="process-title">Our Process</div>
-      <div class="process-steps">
-        <div class="process-step">
-          <div class="step-num">1</div>
-          <div class="step-name">Consultation</div>
-          <div class="step-desc">We work with you to understand your requirements and define the right solution.</div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">2</div>
-          <div class="step-name">Quote & Project Start</div>
-          <div class="step-desc">You receive a clear, competitive quote before work begins.</div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">3</div>
-          <div class="step-name">Pre-Engineering Assessment</div>
-          <div class="step-desc">An engineer evaluates your space and requirements for accurate measurements.</div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">4</div>
-          <div class="step-name">Design & Development</div>
-          <div class="step-desc">We create your custom 3D design, delivering a finalized, production-ready file.</div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">5</div>
-          <div class="step-name">Optional Fabrication</div>
-          <div class="step-desc">High-precision manufacturing and direct delivery to you.</div>
+          <article class="cap-card reveal">
+            <p class="cap-tag">SYS-02</p>
+            <h2 class="cap-title">DEFENSE SOLUTIONS</h2>
+            <p class="cap-desc">Protecting today against the threats of tomorrow.</p>
+            <a href="#defense" class="cap-link">View Defense</a>
+          </article>
+
+          <article class="cap-card reveal">
+            <p class="cap-tag">SYS-03</p>
+            <h2 class="cap-title">AUTOMOTIVE SERVICES</h2>
+            <p class="cap-desc">Full-spectrum vehicle solutions built for performance and reliability.</p>
+            <a href="#automotive" class="cap-link">See Automotive</a>
+          </article>
+
         </div>
       </div>
     </div>
 
-    <div class="divider reveal"></div>
+    <!-- ── SECTION 2: INDUSTRIAL ── -->
+    <section id="industrial" class="section-block alt" aria-labelledby="industrial-heading">
+      <div class="container">
 
-    <div class="two-col reveal">
-      <div>
-        <div class="serve-block">
-          <div class="label">Who We Serve</div>
-          <p>We work with businesses and industrial clients requiring reliable, custom-engineered enclosure solutions (B2B).</p>
-        </div>
-      </div>
-      <div>
-        <div class="why-grid">
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg></div>
-            <div class="why-text"><strong>Precision-Engineered Designs</strong>Accuracy from concept to final file.</div>
+        <div class="split reveal">
+          <div>
+            <span class="section-tag">SYS-01 — Industrial Design</span>
+            <h2 class="section-title" id="industrial-heading">INDUSTRIAL DESIGN</h2>
+            <p class="section-sub">Custom Sheet Metal Enclosures, Engineered for Precision</p>
+            <span class="orange-rule" aria-hidden="true"></span>
+
+            <p style="margin-top:2rem;font-size:0.95rem;color:var(--muted);line-height:1.75;max-width:58ch;">
+              We design custom 3D industrial solutions for sheet metal enclosures of all sizes and applications. From concept to final design, our work is focused on accuracy, durability, and real-world performance. With over 7 years of experience, we've developed solutions for ovens, paint booths, storage systems, ventilation systems, and specialized protective environments. Every design is tailored to meet your exact specifications—no off-the-shelf shortcuts.
+            </p>
+
+            <div class="serve-block" style="margin-top:2rem;">
+              <p class="serve-label">Who We Serve</p>
+              <p class="serve-text">We work with businesses and industrial clients requiring reliable, custom-engineered enclosure solutions (B2B).</p>
+            </div>
+
+            <ul class="why-list" aria-label="Why choose Kazimoto for industrial design">
+              <li>Precision-engineered designs</li>
+              <li>Fully custom-built solutions</li>
+              <li>Durable, real-world performance</li>
+              <li>Competitive pricing with guaranteed value</li>
+            </ul>
           </div>
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
-            <div class="why-text"><strong>Fully Custom-Built</strong>No off-the-shelf shortcuts.</div>
-          </div>
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
-            <div class="why-text"><strong>Durable Performance</strong>Built for real-world conditions.</div>
-          </div>
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-            <div class="why-text"><strong>Competitive Pricing</strong>Guaranteed value on every project.</div>
+
+          <div>
+            <div class="gallery gallery-3col" aria-label="Industrial design project gallery">
+              <img src="images/gallery2/ad1.png"        alt="Industrial enclosure design — project view 1"   width="400" height="300" loading="lazy" />
+              <img src="images/gallery2/ad_2.png"       alt="Industrial enclosure design — project view 2"   width="400" height="300" loading="lazy" />
+              <img src="images/gallery2/ad_3.png"       alt="Industrial enclosure design — project view 3"   width="400" height="300" loading="lazy" />
+              <img src="images/gallery2/IMG_5889.jpg"   alt="Completed sheet metal enclosure installation 1" width="400" height="300" loading="lazy" />
+              <img src="images/gallery2/IMG_5890.jpg"   alt="Completed sheet metal enclosure installation 2" width="400" height="300" loading="lazy" />
+              <img src="images/gallery2/IMG_5891.jpg"   alt="Completed sheet metal enclosure installation 3" width="400" height="300" loading="lazy" />
+            </div>
           </div>
         </div>
+
+        <ol class="process-list reveal" aria-label="Industrial design process">
+          <li>
+            <span class="process-num">01</span>
+            <span class="process-text"><strong>Consultation</strong> Discovery call to understand scope, requirements, and project goals.</span>
+          </li>
+          <li>
+            <span class="process-num">02</span>
+            <span class="process-text"><strong>Quote &amp; Project Start</strong> Detailed proposal and project timeline agreed upon.</span>
+          </li>
+          <li>
+            <span class="process-num">03</span>
+            <span class="process-text"><strong>Pre-Engineering Assessment</strong> Site evaluation and technical specifications confirmed.</span>
+          </li>
+          <li>
+            <span class="process-num">04</span>
+            <span class="process-text"><strong>Design &amp; Development</strong> Full 3D CAD design engineered to your exact requirements.</span>
+          </li>
+          <li>
+            <span class="process-num">05</span>
+            <span class="process-text"><strong>Fabrication &amp; Delivery</strong> Optional production and on-site delivery of completed enclosures.</span>
+          </li>
+        </ol>
+
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- ─── SECTION 3: DEFENSE ─── -->
-  <section id="defense" style="background:#030303; position:relative; overflow:hidden;">
-    <div style="position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 40px,rgba(237,153,0,0.012) 40px,rgba(237,153,0,0.012) 41px);pointer-events:none;"></div>
+    <!-- ── SECTION 3: DEFENSE ── -->
+    <section id="defense" class="section-block" aria-labelledby="defense-heading">
+      <div class="defense-inner container">
 
-    <div class="reveal" style="position:relative;">
-      <div class="section-tag">Section 03 — Defense Engineering</div>
-      <h2 class="section-title">Defense Solutions</h2>
-      <p class="section-subtitle">Advanced Protective Systems, Engineered for Real-World Safety</p>
-      <p class="section-body">
-        We design and develop custom ballistic and protective solutions for law enforcement, security
-        professionals, and private clients. Our work focuses on delivering reliable, purpose-built systems
-        that enhance safety in high-risk and security-critical environments. Our capabilities include
-        ballistic shields, reinforced safe rooms, personal protection systems, and tailored defense
-        solutions—each engineered to meet specific operational needs and real-world conditions.
-      </p>
-    </div>
-
-    <div class="img-grid-cinema reveal" style="position:relative;">
-      <div class="img-wrap"><img src="images/gallery3/IMG_5892.jpg" alt="Defense 1" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery3/IMG_5893.jpg" alt="Defense 2" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery3/IMG_5894.jpg" alt="Defense 3" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery3/IMG_5895.jpg" alt="Defense 4" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery3/IMG_5896.jpg" alt="Defense 5" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery3/IMG_5897.jpg" alt="Defense 6" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery3/IMG_5898.jpg" alt="Defense 7" loading="lazy" /></div>
-    </div>
-
-    <div class="process reveal" style="position:relative;">
-      <div class="process-title">Our Process</div>
-      <div class="process-steps">
-        <div class="process-step">
-          <div class="step-num">1</div>
-          <div class="step-name">Consultation & Quote</div>
-          <div class="step-desc">We assess your requirements and provide a clear, same-day quote.</div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">2</div>
-          <div class="step-name">Design & Development</div>
-          <div class="step-desc">A tailored solution with ongoing check-ins to meet your expectations.</div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">3</div>
-          <div class="step-name">Build & Deployment</div>
-          <div class="step-desc">Your system is built, tested, and delivered—ready for installation.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="divider reveal" style="position:relative;"></div>
-
-    <div class="two-col reveal" style="position:relative;">
-      <div>
-        <div class="serve-block">
-          <div class="label">Who We Serve</div>
-          <p>Law enforcement, security professionals, businesses, and private clients requiring reliable, custom-engineered protection solutions.</p>
-        </div>
-      </div>
-      <div>
-        <div class="why-grid">
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-            <div class="why-text"><strong>Custom-Built Systems</strong>Purpose-built for your operational environment.</div>
+        <div class="split split-reverse reveal">
+          <div>
+            <div class="gallery gallery-2col" aria-label="Defense solutions project gallery">
+              <img src="images/gallery3/IMG_5892.jpg" alt="Defense protective system — view 1" width="600" height="400" loading="lazy" />
+              <img src="images/gallery3/IMG_5893.jpg" alt="Defense protective system — view 2" width="600" height="400" loading="lazy" />
+              <img src="images/gallery3/IMG_5894.jpg" alt="Ballistic shield deployment"        width="600" height="400" loading="lazy" class="gallery-span2" style="aspect-ratio:16/7;" />
+              <img src="images/gallery3/IMG_5895.jpg" alt="Defense protective system — view 4" width="600" height="400" loading="lazy" />
+              <img src="images/gallery3/IMG_5896.jpg" alt="Defense protective system — view 5" width="600" height="400" loading="lazy" />
+              <img src="images/gallery3/IMG_5897.jpg" alt="Reinforced enclosure system"        width="600" height="400" loading="lazy" />
+              <img src="images/gallery3/IMG_5898.jpg" alt="Custom protective system build"     width="600" height="400" loading="lazy" />
+            </div>
           </div>
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg></div>
-            <div class="why-text"><strong>Real-World Application</strong>Engineered for field-ready performance.</div>
+
+          <div>
+            <span class="section-tag">SYS-02 — Defense Solutions</span>
+            <h2 class="section-title" id="defense-heading">DEFENSE SOLUTIONS</h2>
+            <p class="section-sub">Advanced Protective Systems, Engineered for Real-World Safety</p>
+            <span class="orange-rule" aria-hidden="true"></span>
+
+            <p style="margin-top:2rem;font-size:0.95rem;color:var(--muted);line-height:1.75;max-width:58ch;">
+              We design and develop custom ballistic and protective solutions for law enforcement, security professionals, and private clients. Our work focuses on delivering reliable, purpose-built systems that enhance safety in high-risk and security-critical environments. Our capabilities include ballistic shields, reinforced safe rooms, personal protection systems, and tailored defense solutions—each engineered to meet specific operational needs and real-world conditions.
+            </p>
+
+            <div class="serve-block" style="margin-top:2rem;">
+              <p class="serve-label">Who We Serve</p>
+              <p class="serve-text">Law enforcement, security professionals, businesses, and private clients requiring reliable, custom-engineered protection solutions.</p>
+            </div>
+
+            <ul class="why-list" aria-label="Why choose Kazimoto for defense solutions">
+              <li>Custom-built protective systems</li>
+              <li>Engineered for real-world application</li>
+              <li>Reliable, high-quality materials</li>
+              <li>Discreet and professional service</li>
+            </ul>
+
+            <ol class="process-list" aria-label="Defense solutions process">
+              <li>
+                <span class="process-num">01</span>
+                <span class="process-text"><strong>Consultation &amp; Quote</strong> Confidential briefing on threat environment and operational requirements.</span>
+              </li>
+              <li>
+                <span class="process-num">02</span>
+                <span class="process-text"><strong>Design &amp; Development</strong> Engineering of custom protective systems to specification.</span>
+              </li>
+              <li>
+                <span class="process-num">03</span>
+                <span class="process-text"><strong>Build &amp; Deployment</strong> Fabrication, testing, and delivery of completed systems.</span>
+              </li>
+            </ol>
           </div>
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
-            <div class="why-text"><strong>High-Quality Materials</strong>Reliable components on every build.</div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── SECTION 4: AUTOMOTIVE ── -->
+    <section id="automotive" class="section-block alt" aria-labelledby="automotive-heading">
+      <div class="container">
+
+        <div class="split reveal">
+          <div>
+            <span class="section-tag">SYS-03 — Automotive Services</span>
+            <h2 class="section-title" id="automotive-heading">AUTOMOTIVE SERVICES</h2>
+            <p class="section-sub">Complete Automotive Solutions, Built for Performance and Reliability</p>
+            <span class="orange-rule" aria-hidden="true"></span>
+
+            <p style="margin-top:2rem;font-size:0.95rem;color:var(--muted);line-height:1.75;max-width:58ch;">
+              We provide full-spectrum automotive services from repair and maintenance to performance upgrades and custom builds. Whether you're restoring reliability or enhancing performance, every vehicle is handled with precision and attention to detail. Our capabilities include bodywork and windshield repair, engine diagnostics and rebuilds, cosmetic enhancements, and performance modifications. We also offer mobile pre-purchase inspections and supply a wide range of automotive products, accessories, tires, protective covers, custom exhaust systems, and motorcycle components.
+            </p>
+
+            <div class="serve-block" style="margin-top:2rem;">
+              <p class="serve-label">What We Offer</p>
+              <p class="serve-text">Full-service automotive repair, performance upgrades, custom builds, pre-purchase inspections, and vehicle sourcing. New inventory regularly available.</p>
+            </div>
+
+            <ul class="why-list" aria-label="Why choose Kazimoto for automotive services">
+              <li>Full-service automotive expertise</li>
+              <li>Performance and cosmetic customization</li>
+              <li>Honest assessments and tailored solutions</li>
+              <li>Quality parts and precision workmanship</li>
+            </ul>
+
+            <ol class="process-list" aria-label="Automotive services process">
+              <li>
+                <span class="process-num">01</span>
+                <span class="process-text"><strong>Consultation</strong> Assessment of vehicle condition and client goals.</span>
+              </li>
+              <li>
+                <span class="process-num">02</span>
+                <span class="process-text"><strong>Service &amp; Build Plan</strong> Detailed scope of work and pricing confirmed.</span>
+              </li>
+              <li>
+                <span class="process-num">03</span>
+                <span class="process-text"><strong>Execution</strong> Precise service delivery with quality-controlled workmanship.</span>
+              </li>
+              <li>
+                <span class="process-num">04</span>
+                <span class="process-text"><strong>Delivery</strong> Vehicle returned to client with full walk-through of completed work.</span>
+              </li>
+            </ol>
           </div>
-          <div class="why-item">
-            <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></div>
-            <div class="why-text"><strong>Discreet & Professional</strong>Confidential service from start to finish.</div>
+
+          <div>
+            <div class="gallery gallery-3col" aria-label="Automotive services project gallery">
+              <img src="images/gallery4/IMG_5775.jpg"                                    alt="Automotive service — vehicle 1"  width="400" height="300" loading="lazy" />
+              <img src="images/gallery4/IMG_5878.jpg"                                    alt="Automotive service — vehicle 2"  width="400" height="300" loading="lazy" />
+              <img src="images/gallery4/IMG_5881.jpg"                                    alt="Automotive bodywork detail"       width="400" height="300" loading="lazy" />
+              <img src="images/gallery4/IMG_5882.jpg"                                    alt="Automotive performance build"     width="400" height="300" loading="lazy" />
+              <img src="images/gallery4/IMG_5883.jpg"                                    alt="Custom vehicle modification"      width="400" height="300" loading="lazy" />
+              <img src="images/gallery4/IMG_5885.jpg"                                    alt="Automotive service in progress"   width="400" height="300" loading="lazy" />
+              <img src="images/gallery4/03F368F7-C314-46D1-82CD-A92955C20574.jpg"        alt="Vehicle detail work"              width="400" height="300" loading="lazy" class="gallery-span2" style="aspect-ratio:2/1;" />
+              <img src="images/gallery4/6C11210D-7B58-4A3E-80FB-0503DA55B3EE.jpg"        alt="Automotive project — exterior"    width="400" height="300" loading="lazy" />
+              <img src="images/gallery4/781A6DA6-1177-403D-97E0-9EFE677D91C7.jpg"        alt="Automotive project — finished"    width="400" height="300" loading="lazy" />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── SECTION 5: ABOUT + CONTACT ── -->
+    <section id="contact" aria-labelledby="contact-heading">
+
+      <div class="about-block">
+        <div class="container reveal">
+          <span class="section-tag">About Us</span>
+          <h2 class="section-title" id="contact-heading" style="max-width:18ch;">BUILT ON PRECISION. DRIVEN BY RESULTS.</h2>
+          <span class="orange-rule" aria-hidden="true"></span>
+          <p class="about-text" style="margin-top:1.75rem;">
+            Kazimoto Engineering is a multidisciplinary engineering firm specializing in industrial design, protective systems, and automotive solutions. We work with businesses, law enforcement, and private clients to deliver practical, high-performance results where precision and reliability matter most.
+          </p>
+        </div>
+      </div>
+
+      <div class="section-block">
+        <div class="container">
+          <div class="contact-grid reveal">
+
+            <div>
+              <span class="section-tag">Get in Touch</span>
+              <h3 style="font-family:var(--font-display);font-size:clamp(2rem,4vw,3.2rem);line-height:1;margin-bottom:1rem;text-wrap:balance;">
+                START A PROJECT
+              </h3>
+              <p style="font-size:0.9rem;color:var(--muted);margin-bottom:2.5rem;max-width:42ch;">Tell us about your project and we'll get back to you within 24 hours.</p>
+
+              <form class="contact-form" action="#" method="POST" novalidate aria-label="Contact form">
+                <div class="form-field">
+                  <label for="name">Name <span aria-label="required">*</span></label>
+                  <input type="text" id="name" name="name" autocomplete="name" required placeholder="Your full name" aria-required="true" />
+                </div>
+                <div class="form-field">
+                  <label for="email">Email <span aria-label="required">*</span></label>
+                  <input type="email" id="email" name="email" autocomplete="email" required placeholder="your@email.com" aria-required="true" />
+                </div>
+                <div class="form-field">
+                  <label for="message">Message <span aria-label="required">*</span></label>
+                  <textarea id="message" name="message" rows="4" required placeholder="Describe your project or inquiry" aria-required="true"></textarea>
+                </div>
+                <div class="form-submit">
+                  <button type="submit" class="btn-primary" style="border:none;cursor:pointer;font-family:var(--font-body);">
+                    Send Message
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <div class="contact-info">
+              <div>
+                <span class="section-tag">Direct Contact</span>
+                <div class="contact-detail-group">
+                  <div class="contact-detail">
+                    <span class="contact-detail-label">Email</span>
+                    <a href="mailto:Info@kazimotoengineering.com">Info@kazimotoengineering.com</a>
+                  </div>
+                  <div class="contact-detail">
+                    <span class="contact-detail-label">Phone</span>
+                    <a href="tel:+16476499668">647-649-9668</a>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <span class="section-tag">Follow Our Work</span>
+                <div class="contact-detail-group">
+                  <div class="contact-detail">
+                    <span class="contact-detail-label">Instagram</span>
+                    <a href="https://www.instagram.com/kazimotoeng" target="_blank" rel="noopener noreferrer">@KazimotoEng</a>
+                  </div>
+                  <div class="contact-detail">
+                    <span class="contact-detail-label">Facebook</span>
+                    <a href="https://www.facebook.com/KazimotoEngineering/" target="_blank" rel="noopener noreferrer">KazimotoEngineering</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
-    </div>
-  </section>
 
-  <!-- ─── SECTION 4: AUTOMOTIVE ─── -->
-  <section id="automotive" class="alt-bg">
-    <div class="reveal">
-      <div class="section-tag">Section 04 — Automotive</div>
-      <h2 class="section-title">Automotive Services</h2>
-      <p class="section-subtitle">Complete Automotive Solutions, Built for Performance and Reliability</p>
-      <p class="section-body">
-        We provide full-spectrum automotive services from repair and maintenance to performance upgrades
-        and custom builds. Whether you're restoring reliability or enhancing performance, every vehicle
-        is handled with precision and attention to detail. Our capabilities include bodywork and windshield
-        repair, engine diagnostics and rebuilds, cosmetic enhancements, and performance modifications.
-        We also offer mobile pre-purchase inspections. Beyond service, we supply tires, protective covers,
-        custom exhaust systems, and motorcycle components—and we source and sell vehicles with new
-        inventory regularly available.
-      </p>
-    </div>
+    </section>
 
-    <div class="img-grid-auto reveal">
-      <div class="img-wrap"><img src="images/gallery4/IMG_5775.jpg" alt="Automotive 1" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery4/IMG_5878.jpg" alt="Automotive 2" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery4/IMG_5881.jpg" alt="Automotive 3" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery4/IMG_5882.jpg" alt="Automotive 4" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery4/IMG_5883.jpg" alt="Automotive 5" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery4/IMG_5885.jpg" alt="Automotive 6" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery4/03F368F7-C314-46D1-82CD-A92955C20574.jpg" alt="Automotive 7" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery4/6C11210D-7B58-4A3E-80FB-0503DA55B3EE.jpg" alt="Automotive 8" loading="lazy" /></div>
-      <div class="img-wrap"><img src="images/gallery4/781A6DA6-1177-403D-97E0-9EFE677D91C7.jpg" alt="Automotive 9" loading="lazy" /></div>
-    </div>
-
-    <div class="process reveal">
-      <div class="process-title">Our Service Process</div>
-      <div class="process-steps">
-        <div class="process-step">
-          <div class="step-num">1</div>
-          <div class="step-name">Consultation</div>
-          <div class="step-desc">We assess your vehicle, goals, and budget to define the right solution.</div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">2</div>
-          <div class="step-name">Service & Build Plan</div>
-          <div class="step-desc">You receive a clear plan covering repairs, upgrades, or customization.</div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">3</div>
-          <div class="step-name">Execution</div>
-          <div class="step-desc">Our team completes the work with precision—maintenance, modification, or full build.</div>
-        </div>
-        <div class="process-step">
-          <div class="step-num">4</div>
-          <div class="step-name">Delivery</div>
-          <div class="step-desc">Your vehicle is returned ready to perform. Reliable, refined, and road-ready.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="divider reveal"></div>
-
-    <div class="why-grid reveal" style="max-width:800px;">
-      <div class="why-item">
-        <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>
-        <div class="why-text"><strong>Full-Service Expertise</strong>Everything from diagnostics to custom builds.</div>
-      </div>
-      <div class="why-item">
-        <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="13 17 18 12 13 7"/><polyline points="6 17 11 12 6 7"/></svg></div>
-        <div class="why-text"><strong>Performance & Cosmetics</strong>Upgrades tailored to your goals.</div>
-      </div>
-      <div class="why-item">
-        <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div>
-        <div class="why-text"><strong>Honest Assessments</strong>Straightforward advice, no upselling.</div>
-      </div>
-      <div class="why-item">
-        <div class="why-icon" aria-hidden="true"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>
-        <div class="why-text"><strong>Quality Workmanship</strong>Precision parts and precision labor.</div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ─── SECTION 5: CONTACT ─── -->
-  <section id="contact">
-    <div class="reveal">
-      <div class="section-tag">Section 05 — Get In Touch</div>
-      <h2 class="section-title">Contact Us</h2>
-      <p class="section-body" style="max-width:660px;">
-        Kazimoto Engineering is a multidisciplinary engineering firm specializing in industrial design,
-        protective systems, and automotive solutions. We work with businesses, law enforcement, and private
-        clients to deliver practical, high-performance results where precision and reliability matter most.
-      </p>
-    </div>
-
-    <div class="contact-grid">
-      <div class="contact-info reveal">
-        <h3>Reach Out</h3>
-
-        <div class="contact-detail">
-          <div class="contact-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
-          <a href="mailto:Info@kazimotoengineering.com">Info@kazimotoengineering.com</a>
-        </div>
-        <div class="contact-detail">
-          <div class="contact-icon" aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ED9900" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.22h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
-          <a href="tel:6476499668">647-649-9668</a>
-        </div>
-
-        <div class="social-links">
-          <a href="https://www.instagram.com/kazimotoeng" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Follow Kazimoto Engineering on Instagram">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-            @KazimotoEng
-          </a>
-          <a href="https://www.facebook.com/KazimotoEngineering/" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="Visit Kazimoto Engineering on Facebook">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
-            Facebook
-          </a>
-        </div>
-      </div>
-
-      <div class="contact-form reveal">
-        <h3>Send a Message</h3>
-        <form onsubmit="handleSubmit(event)" novalidate>
-          <div class="form-group">
-            <label for="contact-name">Your Name <span aria-hidden="true" style="color:var(--orange)">*</span></label>
-            <input type="text" id="contact-name" name="name" placeholder="John Smith" autocomplete="name" required aria-required="true" />
-          </div>
-          <div class="form-group">
-            <label for="contact-email">Email Address <span aria-hidden="true" style="color:var(--orange)">*</span></label>
-            <input type="email" id="contact-email" name="email" placeholder="john@company.com" autocomplete="email" required aria-required="true" />
-          </div>
-          <div class="form-group">
-            <label for="contact-service">Service</label>
-            <select id="contact-service" name="service">
-              <option value="">Select a service...</option>
-              <option value="industrial">Industrial Design</option>
-              <option value="defense">Defense Solutions</option>
-              <option value="automotive">Automotive Services</option>
-              <option value="general">General Inquiry</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="contact-message">Message <span aria-hidden="true" style="color:var(--orange)">*</span></label>
-            <textarea id="contact-message" name="message" placeholder="Tell us about your project..." required aria-required="true"></textarea>
-          </div>
-          <button type="submit" class="btn-solid" style="width:100%;" id="submit-btn">Send Message</button>
-          <div id="form-status" aria-live="polite" style="margin-top:0.75rem;font-size:0.88rem;min-height:1.2rem;"></div>
-        </form>
-      </div>
-    </div>
-  </section>
-
-  </main><!-- end #main-content -->
+  </main>
 
   <!-- ─── FOOTER ─── -->
   <footer role="contentinfo">
-    <img src="images/gallery1/IMG_5811.jpg" alt="Kazimoto Engineering" />
-    <p>© 2025 Kazimoto Engineering. All rights reserved.</p>
-    <p style="color:#333;">Engineering the Extraordinary</p>
+    <div class="container">
+      <div class="footer-inner">
+        <span class="footer-brand">KAZIMOTO ENGINEERING</span>
+        <nav aria-label="Footer navigation">
+          <ul class="footer-nav" role="list">
+            <li><a href="#industrial">Industrial</a></li>
+            <li><a href="#defense">Defense</a></li>
+            <li><a href="#automotive">Automotive</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+        <p class="footer-copy" id="footer-copy"></p>
+      </div>
+    </div>
   </footer>
 
   <script>
-    // ─── NAVBAR HIDE/SHOW ───
-    let lastScroll = 0;
-    const navbar = document.getElementById('navbar');
+    // Copyright year
+    document.getElementById('footer-copy').textContent =
+      '\u00A9 ' + new Date().getFullYear() + ' Kazimoto Engineering. All rights reserved.';
 
-    window.addEventListener('scroll', () => {
-      const current = window.scrollY;
-      if (current > lastScroll && current > 120) {
-        navbar.classList.add('hidden');
-      } else {
-        navbar.classList.remove('hidden');
-      }
-      navbar.classList.toggle('scrolled', current > 50);
-      lastScroll = current;
-    });
-
-    // ─── MOBILE NAV ───
-    function toggleNav() {
-      const links = document.getElementById('navLinks');
-      const btn = document.getElementById('hamburger');
-      const isOpen = links.classList.toggle('open');
-      btn.setAttribute('aria-expanded', isOpen);
-    }
-
-    // Close nav on link click
-    document.querySelectorAll('.nav-links a').forEach(a => {
-      a.addEventListener('click', () => {
-        document.getElementById('navLinks').classList.remove('open');
-        document.getElementById('hamburger').setAttribute('aria-expanded', 'false');
-      });
-    });
-
-    // ─── SCROLL REVEAL ───
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
+    // Navbar hide/show on scroll
+    (function() {
+      const nav = document.getElementById('navbar');
+      let lastY = 0;
+      window.addEventListener('scroll', function() {
+        const y = window.scrollY;
+        if (y > lastY && y > 80) {
+          nav.classList.add('hidden');
+        } else {
+          nav.classList.remove('hidden');
         }
+        nav.classList.toggle('scrolled', y > 20);
+        lastY = y;
+      }, { passive: true });
+    })();
+
+    // Mobile hamburger
+    (function() {
+      const btn = document.querySelector('.nav-hamburger');
+      const menu = document.getElementById('nav-menu');
+      btn.addEventListener('click', function() {
+        const open = menu.classList.toggle('open');
+        btn.setAttribute('aria-expanded', open);
+        btn.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
       });
-    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+      // Close menu on link click
+      menu.querySelectorAll('a').forEach(function(a) {
+        a.addEventListener('click', function() {
+          menu.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+          btn.setAttribute('aria-label', 'Open navigation menu');
+        });
+      });
+    })();
 
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+    // Scroll reveal
+    (function() {
+      if (!window.IntersectionObserver) return;
+      const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            observer.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      document.querySelectorAll('.reveal').forEach(function(el) {
+        observer.observe(el);
+      });
+    })();
 
-    // ─── SMOOTH SCROLL FOR ANCHORS ───
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
+    // Contact form — prevent default + simple feedback
+    (function() {
+      const form = document.querySelector('.contact-form');
+      if (!form) return;
+      form.addEventListener('submit', function(e) {
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          const offset = 72;
-          const top = target.getBoundingClientRect().top + window.scrollY - offset;
-          window.scrollTo({ top, behavior: 'smooth' });
-        }
-      });
-    });
-
-    // ─── FORM SUBMIT ───
-    function handleSubmit(e) {
-      e.preventDefault();
-      const btn = document.getElementById('submit-btn');
-      const status = document.getElementById('form-status');
-      btn.textContent = 'Sending...';
-      btn.disabled = true;
-      btn.style.opacity = '0.7';
-      setTimeout(() => {
+        const btn = form.querySelector('button[type="submit"]');
+        const orig = btn.textContent;
         btn.textContent = 'Message Sent';
-        btn.style.background = '#1a6a1a';
-        btn.style.opacity = '1';
-        status.textContent = 'Thank you! We will get back to you shortly.';
-        status.style.color = '#4caf50';
-        setTimeout(() => {
-          btn.textContent = 'Send Message';
-          btn.style.background = '';
+        btn.disabled = true;
+        setTimeout(function() {
+          btn.textContent = orig;
           btn.disabled = false;
-          status.textContent = '';
-          e.target.reset();
-        }, 4000);
-      }, 1000);
-    }
+          form.reset();
+        }, 3000);
+      });
+    })();
   </script>
+
 </body>
 </html>
