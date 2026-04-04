@@ -459,10 +459,13 @@
       transition: filter 0.3s ease;
     }
     .gallery img:hover { filter: brightness(1) saturate(1); }
-    /* Featured 3: hero + two full-width below */
-    .gallery-featured { grid-template-columns: 1fr; }
-    .gallery-featured .gallery-hero { aspect-ratio: 16/9; }
-    .gallery-featured img:not(.gallery-hero) { aspect-ratio: 16/7; }
+    /* Featured 3: one hero full width + two side by side below */
+    .gallery-featured { grid-template-columns: 1fr 1fr; }
+    .gallery-featured .gallery-hero {
+      grid-column: 1 / -1;
+      aspect-ratio: 16/9;
+    }
+    .gallery-featured img:not(.gallery-hero) { aspect-ratio: 4/3; }
     @media (max-width: 640px) {
       .gallery-3col { grid-template-columns: repeat(2, 1fr); }
       .gallery-span2 { grid-column: span 1; }
