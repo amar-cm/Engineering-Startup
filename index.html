@@ -463,9 +463,12 @@
     .gallery-industrial .img-hero {
       grid-column: 1 / -1;
     }
-    #ind-1 { aspect-ratio: 1/1; }
-    #ind-2 { aspect-ratio: 1/1; }
-    #ind-3 { aspect-ratio: 1/1; }
+    /* ind-1: landscape CAD render with dimensions — keep wide to show callouts */
+    #ind-1 { aspect-ratio: 4/3; object-position: center center; }
+    /* ind-2: bracket assembly — compact landscape part on white bg */
+    #ind-2 { aspect-ratio: 5/4; object-position: center center; }
+    /* ind-3: cone structure — slightly portrait source, keep square */
+    #ind-3 { aspect-ratio: 1/1; object-position: center top; }
 
     /* Defense: feature on top + 2-col grid */
     .gallery-defense {
@@ -477,10 +480,15 @@
       aspect-ratio: 21/9;
       order: -1;
     }
+    /* def-1: SketchUp watermark top-right — crop it out */
+    #def-1 { aspect-ratio: 16/9; object-position: left 60%; }
     #def-2 { aspect-ratio: 3/2; }
-    #def-3 { aspect-ratio: 5/4; }
-    #def-5 { aspect-ratio: 2/3; }
-    #def-6 { aspect-ratio: 4/4; }
+    /* def-3: ballistic shield — tall portrait product shot, don't squash to landscape */
+    #def-3 { aspect-ratio: 3/4; object-position: center center; }
+    /* def-5: mesh model with "Subdivision Level: 2" text at bottom — crop it */
+    #def-5 { aspect-ratio: 1/1; object-position: center top; }
+    /* def-6: very tall portrait wireframe — keep portrait */
+    #def-6 { aspect-ratio: 2/3; object-position: center top; }
     #def-7 { aspect-ratio: 3/4; }
 
     /* Automotive: 2-top + 1 wide bottom pattern */
@@ -489,22 +497,30 @@
     }
     .gallery-auto img { aspect-ratio: 3/4; }
     #auto-3, #auto-6 { grid-column: 1 / -1; }
-    #auto-1 { aspect-ratio: 2/3; }
-    #auto-2 { aspect-ratio: 9/16; }
-    #auto-6 { aspect-ratio: 4/3; }
+    #auto-1 { aspect-ratio: 2/3; object-position: center 30%; }
+    #auto-2 { aspect-ratio: 9/16; object-position: center 40%; }
+    /* auto-5: "Hole in 1" text in middle — crop to top portion showing the block */
+    #auto-5 { object-position: center top; }
+    /* auto-6: "Heart surgery in progress" text at bottom — crop it out, show engine */
+    #auto-6 { aspect-ratio: 16/9; object-position: center 25%; }
 
     @media (max-width: 768px) {
       .gallery-industrial { grid-template-columns: 1fr; }
       .gallery-industrial .img-hero { grid-column: 1; }
       .gallery-defense { grid-template-columns: 1fr 1fr; }
       .gallery-defense .img-feature { grid-column: 1 / -1; }
+      /* Portrait images span full width on tablet */
+      #def-3, #def-6 { grid-column: 1 / -1; }
       .gallery-auto { grid-template-columns: 1fr 1fr; }
       #auto-3, #auto-6 { grid-column: 1 / -1; }
     }
     @media (max-width: 480px) {
       .gallery-defense, .gallery-auto { grid-template-columns: 1fr; }
       .gallery-defense .img-feature { grid-column: 1; aspect-ratio: 16/9; }
-      #auto-3, #auto-6 { grid-column: 1; }
+      #def-3, #def-6, #auto-3, #auto-6 { grid-column: 1; }
+      /* Limit portrait height on single-column mobile */
+      #def-3, #def-6, #def-7 { max-height: 60vh; }
+      #auto-6 { aspect-ratio: 4/3; }
     }
 
     /* ─── PROCESS ─── */
