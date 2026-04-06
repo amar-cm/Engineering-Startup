@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Kazimoto Engineering — Design Playground</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--ui-bg:#0e0e0e;--ui-surface:#1a1a1a;--ui-border:#2a2a2a;--ui-text:#ccc;--ui-dim:#777;--ui-accent:#ED9900}
+  html{font-size:14px}
+  body{font-family:'Barlow',system-ui,sans-serif;background:var(--ui-bg);color:var(--ui-text);overflow:hidden;height:100vh}
+
+  .layout{display:grid;grid-template-columns:320px 1fr;grid-template-rows:1fr auto;height:100vh}
+  .controls{grid-row:1/3;overflow-y:auto;background:var(--ui-surface);border-right:1px solid var(--ui-border);padding:1rem}
+  .preview-wrap{grid-column:2;grid-row:1;overflow:hidden;position:relative}
+  .preview-wrap iframe{width:100%;height:100%;border:none;display:block}
+  .prompt-bar{grid-column:2;grid-row:2;background:var(--ui-surface);border-top:1px solid var(--ui-border);padding:1rem;display:flex;gap:0.75rem;align-items:flex-start;max-height:180px}
+  .prompt-bar pre{flex:1;white-space:pre-wrap;font-size:0.85rem;color:var(--ui-text);font-family:'Barlow',monospace;line-height:1.5;max-height:140px;overflow-y:auto}
+  .copy-btn{background:var(--ui-accent);color:#000;border:none;padding:0.5rem 1rem;cursor:pointer;font-weight:600;font-size:0.78rem;letter-spacing:0.08em;text-transform:uppercase;white-space:nowrap;flex-shrink:0}
+  .copy-btn:hover{opacity:0.85}
+
+  .ctrl-header{font-family:'Bebas Neue',sans-serif;font-size:1.3rem;letter-spacing:0.06em;color:#fff;padding:0.75rem 0 0.25rem;border-bottom:1px solid var(--ui-border);margin-bottom:0.75rem;margin-top:1.25rem}
+  .ctrl-header:first-child{margin-top:0}
+  .ctrl-group{margin-bottom:0.65rem}
+  .ctrl-label{display:flex;justify-content:space-between;align-items:center;font-size:0.78rem;color:var(--ui-dim);margin-bottom:0.3rem;letter-spacing:0.04em}
+  .ctrl-label span{color:var(--ui-accent);font-weight:600}
+  .ctrl-row{display:flex;align-items:center;gap:0.5rem}
+  input[type="range"]{flex:1;accent-color:var(--ui-accent);height:4px;-webkit-appearance:none;background:var(--ui-border);border-radius:2px;outline:none}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;background:var(--ui-accent);border-radius:50%;cursor:pointer}
+  input[type="color"]{width:36px;height:28px;border:1px solid var(--ui-border);background:transparent;cursor:pointer;padding:0;border-radius:3px}
+  input[type="color"]::-webkit-color-swatch-wrapper{padding:2px}
+  input[type="color"]::-webkit-color-swatch{border:none;border-radius:2px}
+  select{background:var(--ui-bg);color:var(--ui-text);border:1px solid var(--ui-border);padding:0.35rem 0.5rem;font-size:0.8rem;font-family:inherit;border-radius:3px;width:100%}
+
+  .presets{display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:1rem}
+  .preset-btn{padding:0.4rem 0.8rem;font-size:0.72rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;border:1px solid var(--ui-border);background:transparent;color:var(--ui-dim);cursor:pointer;transition:all 0.15s}
+  .preset-btn:hover,.preset-btn.active{border-color:var(--ui-accent);color:var(--ui-accent)}
+
+  .reset-btn{width:100%;margin-top:1rem;padding:0.5rem;background:transparent;border:1px solid var(--ui-border);color:var(--ui-dim);font-size:0.75rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;font-family:inherit}
+  .reset-btn:hover{border-color:#e55;color:#e55}
+
+  .ratio-presets{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+  .ratio-presets button{padding:2px 6px;font-size:0.65rem;font-weight:600;letter-spacing:0.04em;border:1px solid var(--ui-border);background:transparent;color:var(--ui-dim);cursor:pointer;font-family:inherit;transition:all 0.15s}
+  .ratio-presets button:hover{border-color:var(--ui-accent);color:var(--ui-accent)}
+
+  .img-label{font-size:0.72rem;color:var(--ui-accent);letter-spacing:0.06em;margin:0.6rem 0 0.3rem;font-weight:600}
+
+  @media(max-width:900px){
+    .layout{grid-template-columns:1fr;grid-template-rows:auto 1fr auto}
+    .controls{max-height:40vh;grid-row:1}
+    .preview-wrap{grid-row:2;grid-column:1}
+    .prompt-bar{grid-row:3;grid-column:1}
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div style="font-family:'Bebas Neue',sans-serif;font-size:1.6rem;letter-spacing:0.06em;color:#fff;margin-bottom:0.25rem">DESIGN PLAYGROUND</div>
+    <div style="font-size:0.75rem;color:var(--ui-dim);margin-bottom:1rem">Live editing — your actual site</div>
+
+    <div class="presets">
+      <button class="preset-btn active" onclick="applyPreset('default')">Current</button>
+      <button class="preset-btn" onclick="applyPreset('warmSteel')">Warm Steel</button>
+      <button class="preset-btn" onclick="applyPreset('coldForge')">Cold Forge</button>
+      <button class="preset-btn" onclick="applyPreset('ember')">Ember</button>
+      <button class="preset-btn" onclick="applyPreset('midnight')">Midnight</button>
+    </div>
+
+    <!-- COLORS -->
+    <div class="ctrl-header">COLORS</div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Background <span id="v-bg">#000000</span></div>
+      <div class="ctrl-row"><input type="color" id="c-bg" value="#000000" oninput="set('bg',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Accent (Orange) <span id="v-accent">#ED9900</span></div>
+      <div class="ctrl-row"><input type="color" id="c-accent" value="#ED9900" oninput="set('accent',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Primary Text <span id="v-text">#FFFFFF</span></div>
+      <div class="ctrl-row"><input type="color" id="c-text" value="#FFFFFF" oninput="set('text',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Muted Text <span id="v-muted">#777777</span></div>
+      <div class="ctrl-row"><input type="color" id="c-muted" value="#777777" oninput="set('muted',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Surface <span id="v-surface">#111111</span></div>
+      <div class="ctrl-row"><input type="color" id="c-surface" value="#111111" oninput="set('surface',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Dim Background <span id="v-dim">#0a0a0a</span></div>
+      <div class="ctrl-row"><input type="color" id="c-dim" value="#0a0a0a" oninput="set('dim',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Subtle/Border <span id="v-subtle">#444444</span></div>
+      <div class="ctrl-row"><input type="color" id="c-subtle" value="#444444" oninput="set('subtle',this.value)"/></div></div>
+
+    <!-- TYPOGRAPHY -->
+    <div class="ctrl-header">TYPOGRAPHY</div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Hero Title <span id="v-heroSize">5</span>rem</div>
+      <div class="ctrl-row"><input type="range" min="2.5" max="9" step="0.25" value="5" id="r-heroSize" oninput="set('heroSize',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Section Titles <span id="v-sectionSize">3.5</span>rem</div>
+      <div class="ctrl-row"><input type="range" min="1.5" max="6" step="0.25" value="3.5" id="r-sectionSize" oninput="set('sectionSize',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Body Text <span id="v-bodySize">0.95</span>rem</div>
+      <div class="ctrl-row"><input type="range" min="0.75" max="1.4" step="0.05" value="0.95" id="r-bodySize" oninput="set('bodySize',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Section Tags <span id="v-tagSize">0.7</span>rem</div>
+      <div class="ctrl-row"><input type="range" min="0.5" max="1" step="0.05" value="0.7" id="r-tagSize" oninput="set('tagSize',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Card Titles <span id="v-cardSize">1.8</span>rem</div>
+      <div class="ctrl-row"><input type="range" min="1" max="3" step="0.1" value="1.8" id="r-cardSize" oninput="set('cardSize',this.value)"/></div></div>
+
+    <!-- SPACING -->
+    <div class="ctrl-header">SPACING</div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Section Padding <span id="v-secPad">5</span>rem</div>
+      <div class="ctrl-row"><input type="range" min="2" max="10" step="0.5" value="5" id="r-secPad" oninput="set('secPad',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Container Max Width <span id="v-maxW">1280</span>px</div>
+      <div class="ctrl-row"><input type="range" min="900" max="1600" step="20" value="1280" id="r-maxW" oninput="set('maxW',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Gallery Gap <span id="v-galGap">2</span>px</div>
+      <div class="ctrl-row"><input type="range" min="0" max="20" step="1" value="2" id="r-galGap" oninput="set('galGap',this.value)"/></div></div>
+
+    <!-- INDUSTRIAL IMAGES -->
+    <div class="ctrl-header">INDUSTRIAL — 3 IMAGES</div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Layout</div>
+      <select id="s-indLayout" onchange="set('indLayout',this.value)">
+        <option value="2col" selected>Hero + 2 side-by-side</option>
+        <option value="1col">All stacked full width</option>
+        <option value="3col">3 equal columns</option>
+        <option value="2col-equal">2 columns (wrapping)</option>
+        <option value="featured-left">Large left + 2 stacked right</option>
+        <option value="featured-right">2 stacked left + large right</option>
+      </select></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Gallery Gap <span id="v-indGap">2</span>px</div>
+      <div class="ctrl-row"><input type="range" min="0" max="24" step="1" value="2" id="r-indGap" oninput="set('indGap',this.value)"/></div></div>
+
+    <div class="img-label">1 — CAD RENDER (HERO)</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-ind1W">16</span> &times; H <span id="v-ind1H">9</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="16" id="r-ind1W" oninput="setImgRatio('ind-1','ind1W','ind1H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="9" id="r-ind1H" oninput="setImgRatio('ind-1','ind1W','ind1H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('ind-1','ind1W','ind1H',16,9)">16:9</button><button onclick="quickRatio('ind-1','ind1W','ind1H',21,9)">21:9</button><button onclick="quickRatio('ind-1','ind1W','ind1H',4,3)">4:3</button><button onclick="quickRatio('ind-1','ind1W','ind1H',3,2)">3:2</button><button onclick="quickRatio('ind-1','ind1W','ind1H',1,1)">1:1</button><button onclick="quickRatio('ind-1','ind1W','ind1H',5,4)">5:4</button><button onclick="quickRatio('ind-1','ind1W','ind1H',2,1)">2:1</button></div></div>
+
+    <div class="img-label">2 — BRACKET ASSEMBLY</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-ind2W">16</span> &times; H <span id="v-ind2H">10</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="16" id="r-ind2W" oninput="setImgRatio('ind-2','ind2W','ind2H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="10" id="r-ind2H" oninput="setImgRatio('ind-2','ind2W','ind2H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('ind-2','ind2W','ind2H',16,9)">16:9</button><button onclick="quickRatio('ind-2','ind2W','ind2H',16,10)">16:10</button><button onclick="quickRatio('ind-2','ind2W','ind2H',4,3)">4:3</button><button onclick="quickRatio('ind-2','ind2W','ind2H',3,2)">3:2</button><button onclick="quickRatio('ind-2','ind2W','ind2H',1,1)">1:1</button><button onclick="quickRatio('ind-2','ind2W','ind2H',5,4)">5:4</button><button onclick="quickRatio('ind-2','ind2W','ind2H',3,4)">3:4</button></div></div>
+
+    <div class="img-label">3 — CONE STRUCTURE</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-ind3W">16</span> &times; H <span id="v-ind3H">10</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="16" id="r-ind3W" oninput="setImgRatio('ind-3','ind3W','ind3H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="10" id="r-ind3H" oninput="setImgRatio('ind-3','ind3W','ind3H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('ind-3','ind3W','ind3H',16,9)">16:9</button><button onclick="quickRatio('ind-3','ind3W','ind3H',16,10)">16:10</button><button onclick="quickRatio('ind-3','ind3W','ind3H',4,3)">4:3</button><button onclick="quickRatio('ind-3','ind3W','ind3H',3,2)">3:2</button><button onclick="quickRatio('ind-3','ind3W','ind3H',1,1)">1:1</button><button onclick="quickRatio('ind-3','ind3W','ind3H',5,4)">5:4</button><button onclick="quickRatio('ind-3','ind3W','ind3H',3,4)">3:4</button></div></div>
+
+    <!-- DEFENSE IMAGES -->
+    <div class="ctrl-header">DEFENSE — 7 IMAGES</div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Layout</div>
+      <select id="s-defLayout" onchange="set('defLayout',this.value)">
+        <option value="3top-feat-3bot" selected>3 top + feature + 3 bottom</option>
+        <option value="grid-only">Even grid (no feature strip)</option>
+        <option value="feat-top">Feature on top + grid below</option>
+        <option value="feat-bottom">Grid on top + feature bottom</option>
+        <option value="masonry-2col">2 columns masonry-style</option>
+        <option value="masonry-4col">4 columns</option>
+      </select></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Columns <span id="v-defCols">3</span></div>
+      <div class="ctrl-row"><input type="range" min="1" max="5" step="1" value="3" id="r-defCols" oninput="set('defCols',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Gallery Gap <span id="v-defGap">2</span>px</div>
+      <div class="ctrl-row"><input type="range" min="0" max="24" step="1" value="2" id="r-defGap" oninput="set('defGap',this.value)"/></div></div>
+
+    <div class="img-label">1 — SECURE SPACE</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-def1W">4</span> &times; H <span id="v-def1H">3</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="4" id="r-def1W" oninput="setImgRatio('def-1','def1W','def1H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="3" id="r-def1H" oninput="setImgRatio('def-1','def1W','def1H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('def-1','def1W','def1H',4,3)">4:3</button><button onclick="quickRatio('def-1','def1W','def1H',16,9)">16:9</button><button onclick="quickRatio('def-1','def1W','def1H',1,1)">1:1</button><button onclick="quickRatio('def-1','def1W','def1H',3,2)">3:2</button><button onclick="quickRatio('def-1','def1W','def1H',5,4)">5:4</button><button onclick="quickRatio('def-1','def1W','def1H',3,4)">3:4</button><button onclick="quickRatio('def-1','def1W','def1H',2,3)">2:3</button></div></div>
+
+    <div class="img-label">2 — TACTICAL STORAGE</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-def2W">4</span> &times; H <span id="v-def2H">3</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="4" id="r-def2W" oninput="setImgRatio('def-2','def2W','def2H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="3" id="r-def2H" oninput="setImgRatio('def-2','def2W','def2H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('def-2','def2W','def2H',4,3)">4:3</button><button onclick="quickRatio('def-2','def2W','def2H',16,9)">16:9</button><button onclick="quickRatio('def-2','def2W','def2H',1,1)">1:1</button><button onclick="quickRatio('def-2','def2W','def2H',3,2)">3:2</button><button onclick="quickRatio('def-2','def2W','def2H',5,4)">5:4</button><button onclick="quickRatio('def-2','def2W','def2H',3,4)">3:4</button><button onclick="quickRatio('def-2','def2W','def2H',2,3)">2:3</button></div></div>
+
+    <div class="img-label">3 — BALLISTIC SHIELD</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-def3W">4</span> &times; H <span id="v-def3H">3</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="4" id="r-def3W" oninput="setImgRatio('def-3','def3W','def3H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="3" id="r-def3H" oninput="setImgRatio('def-3','def3W','def3H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('def-3','def3W','def3H',4,3)">4:3</button><button onclick="quickRatio('def-3','def3W','def3H',16,9)">16:9</button><button onclick="quickRatio('def-3','def3W','def3H',1,1)">1:1</button><button onclick="quickRatio('def-3','def3W','def3H',3,2)">3:2</button><button onclick="quickRatio('def-3','def3W','def3H',5,4)">5:4</button><button onclick="quickRatio('def-3','def3W','def3H',3,4)">3:4</button><button onclick="quickRatio('def-3','def3W','def3H',2,3)">2:3</button></div></div>
+
+    <div class="img-label">4 — MODULAR SHELTER (FEATURE)</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-def4W">21</span> &times; H <span id="v-def4H">9</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="21" id="r-def4W" oninput="setImgRatio('def-4','def4W','def4H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="9" id="r-def4H" oninput="setImgRatio('def-4','def4W','def4H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('def-4','def4W','def4H',21,9)">21:9</button><button onclick="quickRatio('def-4','def4W','def4H',16,9)">16:9</button><button onclick="quickRatio('def-4','def4W','def4H',2,1)">2:1</button><button onclick="quickRatio('def-4','def4W','def4H',3,1)">3:1</button><button onclick="quickRatio('def-4','def4W','def4H',4,3)">4:3</button><button onclick="quickRatio('def-4','def4W','def4H',5,2)">5:2</button></div></div>
+
+    <div class="img-label">5 — CAD MESH MODEL</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-def5W">4</span> &times; H <span id="v-def5H">3</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="4" id="r-def5W" oninput="setImgRatio('def-5','def5W','def5H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="3" id="r-def5H" oninput="setImgRatio('def-5','def5W','def5H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('def-5','def5W','def5H',4,3)">4:3</button><button onclick="quickRatio('def-5','def5W','def5H',16,9)">16:9</button><button onclick="quickRatio('def-5','def5W','def5H',1,1)">1:1</button><button onclick="quickRatio('def-5','def5W','def5H',3,2)">3:2</button><button onclick="quickRatio('def-5','def5W','def5H',5,4)">5:4</button><button onclick="quickRatio('def-5','def5W','def5H',3,4)">3:4</button><button onclick="quickRatio('def-5','def5W','def5H',2,3)">2:3</button></div></div>
+
+    <div class="img-label">6 — WIREFRAME BLUEPRINT</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-def6W">4</span> &times; H <span id="v-def6H">3</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="4" id="r-def6W" oninput="setImgRatio('def-6','def6W','def6H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="3" id="r-def6H" oninput="setImgRatio('def-6','def6W','def6H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('def-6','def6W','def6H',4,3)">4:3</button><button onclick="quickRatio('def-6','def6W','def6H',16,9)">16:9</button><button onclick="quickRatio('def-6','def6W','def6H',1,1)">1:1</button><button onclick="quickRatio('def-6','def6W','def6H',3,2)">3:2</button><button onclick="quickRatio('def-6','def6W','def6H',5,4)">5:4</button><button onclick="quickRatio('def-6','def6W','def6H',3,4)">3:4</button><button onclick="quickRatio('def-6','def6W','def6H',2,3)">2:3</button></div></div>
+
+    <div class="img-label">7 — MODULAR UNIT</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-def7W">4</span> &times; H <span id="v-def7H">3</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="4" id="r-def7W" oninput="setImgRatio('def-7','def7W','def7H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="3" id="r-def7H" oninput="setImgRatio('def-7','def7W','def7H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('def-7','def7W','def7H',4,3)">4:3</button><button onclick="quickRatio('def-7','def7W','def7H',16,9)">16:9</button><button onclick="quickRatio('def-7','def7W','def7H',1,1)">1:1</button><button onclick="quickRatio('def-7','def7W','def7H',3,2)">3:2</button><button onclick="quickRatio('def-7','def7W','def7H',5,4)">5:4</button><button onclick="quickRatio('def-7','def7W','def7H',3,4)">3:4</button><button onclick="quickRatio('def-7','def7W','def7H',2,3)">2:3</button></div></div>
+
+    <!-- AUTOMOTIVE IMAGES -->
+    <div class="ctrl-header">AUTOMOTIVE — 6 IMAGES</div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Layout</div>
+      <select id="s-autoLayout" onchange="set('autoLayout',this.value)">
+        <option value="3col" selected>3 columns</option>
+        <option value="2col">2 columns</option>
+        <option value="1col">Single column full width</option>
+        <option value="2-top-1-bot">2 top + 1 wide bottom (per row)</option>
+        <option value="hero-grid">1 large hero + small grid</option>
+        <option value="masonry-2col">2 columns masonry-style</option>
+      </select></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Columns <span id="v-autoCols">3</span></div>
+      <div class="ctrl-row"><input type="range" min="1" max="6" step="1" value="3" id="r-autoCols" oninput="set('autoCols',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Gallery Gap <span id="v-autoGap">2</span>px</div>
+      <div class="ctrl-row"><input type="range" min="0" max="24" step="1" value="2" id="r-autoGap" oninput="set('autoGap',this.value)"/></div></div>
+
+    <div class="img-label">1 — CHEVROLET SS</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-auto1W">3</span> &times; H <span id="v-auto1H">4</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="3" id="r-auto1W" oninput="setImgRatio('auto-1','auto1W','auto1H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="4" id="r-auto1H" oninput="setImgRatio('auto-1','auto1W','auto1H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('auto-1','auto1W','auto1H',3,4)">3:4</button><button onclick="quickRatio('auto-1','auto1W','auto1H',4,5)">4:5</button><button onclick="quickRatio('auto-1','auto1W','auto1H',2,3)">2:3</button><button onclick="quickRatio('auto-1','auto1W','auto1H',9,16)">9:16</button><button onclick="quickRatio('auto-1','auto1W','auto1H',1,1)">1:1</button><button onclick="quickRatio('auto-1','auto1W','auto1H',4,3)">4:3</button><button onclick="quickRatio('auto-1','auto1W','auto1H',16,9)">16:9</button></div></div>
+
+    <div class="img-label">2 — TORCH WORK</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-auto2W">3</span> &times; H <span id="v-auto2H">4</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="3" id="r-auto2W" oninput="setImgRatio('auto-2','auto2W','auto2H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="4" id="r-auto2H" oninput="setImgRatio('auto-2','auto2W','auto2H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('auto-2','auto2W','auto2H',3,4)">3:4</button><button onclick="quickRatio('auto-2','auto2W','auto2H',4,5)">4:5</button><button onclick="quickRatio('auto-2','auto2W','auto2H',2,3)">2:3</button><button onclick="quickRatio('auto-2','auto2W','auto2H',9,16)">9:16</button><button onclick="quickRatio('auto-2','auto2W','auto2H',1,1)">1:1</button><button onclick="quickRatio('auto-2','auto2W','auto2H',4,3)">4:3</button><button onclick="quickRatio('auto-2','auto2W','auto2H',16,9)">16:9</button></div></div>
+
+    <div class="img-label">3 — MOTORCYCLE</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-auto3W">3</span> &times; H <span id="v-auto3H">4</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="3" id="r-auto3W" oninput="setImgRatio('auto-3','auto3W','auto3H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="4" id="r-auto3H" oninput="setImgRatio('auto-3','auto3W','auto3H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('auto-3','auto3W','auto3H',3,4)">3:4</button><button onclick="quickRatio('auto-3','auto3W','auto3H',4,5)">4:5</button><button onclick="quickRatio('auto-3','auto3W','auto3H',2,3)">2:3</button><button onclick="quickRatio('auto-3','auto3W','auto3H',9,16)">9:16</button><button onclick="quickRatio('auto-3','auto3W','auto3H',1,1)">1:1</button><button onclick="quickRatio('auto-3','auto3W','auto3H',4,3)">4:3</button><button onclick="quickRatio('auto-3','auto3W','auto3H',16,9)">16:9</button></div></div>
+
+    <div class="img-label">4 — SPORT BIKE</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-auto4W">3</span> &times; H <span id="v-auto4H">4</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="3" id="r-auto4W" oninput="setImgRatio('auto-4','auto4W','auto4H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="4" id="r-auto4H" oninput="setImgRatio('auto-4','auto4W','auto4H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('auto-4','auto4W','auto4H',3,4)">3:4</button><button onclick="quickRatio('auto-4','auto4W','auto4H',4,5)">4:5</button><button onclick="quickRatio('auto-4','auto4W','auto4H',2,3)">2:3</button><button onclick="quickRatio('auto-4','auto4W','auto4H',9,16)">9:16</button><button onclick="quickRatio('auto-4','auto4W','auto4H',1,1)">1:1</button><button onclick="quickRatio('auto-4','auto4W','auto4H',4,3)">4:3</button><button onclick="quickRatio('auto-4','auto4W','auto4H',16,9)">16:9</button></div></div>
+
+    <div class="img-label">5 — CYLINDER INSPECTION</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-auto5W">3</span> &times; H <span id="v-auto5H">4</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="3" id="r-auto5W" oninput="setImgRatio('auto-5','auto5W','auto5H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="4" id="r-auto5H" oninput="setImgRatio('auto-5','auto5W','auto5H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('auto-5','auto5W','auto5H',3,4)">3:4</button><button onclick="quickRatio('auto-5','auto5W','auto5H',4,5)">4:5</button><button onclick="quickRatio('auto-5','auto5W','auto5H',2,3)">2:3</button><button onclick="quickRatio('auto-5','auto5W','auto5H',9,16)">9:16</button><button onclick="quickRatio('auto-5','auto5W','auto5H',1,1)">1:1</button><button onclick="quickRatio('auto-5','auto5W','auto5H',4,3)">4:3</button><button onclick="quickRatio('auto-5','auto5W','auto5H',16,9)">16:9</button></div></div>
+
+    <div class="img-label">6 — ENGINE TEARDOWN</div>
+    <div class="ctrl-group"><div class="ctrl-label">W <span id="v-auto6W">3</span> &times; H <span id="v-auto6H">4</span></div>
+      <div class="ctrl-row"><input type="range" min="2" max="24" step="1" value="3" id="r-auto6W" oninput="setImgRatio('auto-6','auto6W','auto6H',this.value,null)"/><input type="range" min="2" max="24" step="1" value="4" id="r-auto6H" oninput="setImgRatio('auto-6','auto6W','auto6H',null,this.value)"/></div>
+      <div class="ratio-presets"><button onclick="quickRatio('auto-6','auto6W','auto6H',3,4)">3:4</button><button onclick="quickRatio('auto-6','auto6W','auto6H',4,5)">4:5</button><button onclick="quickRatio('auto-6','auto6W','auto6H',2,3)">2:3</button><button onclick="quickRatio('auto-6','auto6W','auto6H',9,16)">9:16</button><button onclick="quickRatio('auto-6','auto6W','auto6H',1,1)">1:1</button><button onclick="quickRatio('auto-6','auto6W','auto6H',4,3)">4:3</button><button onclick="quickRatio('auto-6','auto6W','auto6H',16,9)">16:9</button></div></div>
+
+    <!-- EFFECTS -->
+    <div class="ctrl-header">EFFECTS</div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Accent Rule Width <span id="v-ruleW">48</span>px</div>
+      <div class="ctrl-row"><input type="range" min="20" max="200" step="2" value="48" id="r-ruleW" oninput="set('ruleW',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Accent Rule Height <span id="v-ruleH">3</span>px</div>
+      <div class="ctrl-row"><input type="range" min="1" max="8" step="1" value="3" id="r-ruleH" oninput="set('ruleH',this.value)"/></div></div>
+
+    <div class="ctrl-group"><div class="ctrl-label">Card Hover Border <span id="v-cardBdr">2</span>px</div>
+      <div class="ctrl-row"><input type="range" min="0" max="6" step="1" value="2" id="r-cardBdr" oninput="set('cardBdr',this.value)"/></div></div>
+
+    <button class="reset-btn" onclick="applyPreset('default')">Reset to Default</button>
+  </div>
+
+  <!-- PREVIEW: actual site in iframe -->
+  <div class="preview-wrap">
+    <iframe id="site-frame" src="index.html"></iframe>
+  </div>
+
+  <!-- PROMPT OUTPUT -->
+  <div class="prompt-bar">
+    <pre id="prompt-output">Adjust settings to generate a design prompt...</pre>
+    <button class="copy-btn" onclick="copyPrompt()">Copy Prompt</button>
+  </div>
+
+</div>
+
+<script>
+// All individual images with their default aspect ratios
+const IMG_DEFAULTS = {
+  'ind-1': '16/9',  'ind-2': '16/10', 'ind-3': '16/10',
+  'def-1': '4/3',   'def-2': '4/3',   'def-3': '4/3',
+  'def-4': '21/9',  'def-5': '4/3',   'def-6': '4/3',   'def-7': '4/3',
+  'auto-1': '3/4',  'auto-2': '3/4',  'auto-3': '3/4',
+  'auto-4': '3/4',  'auto-5': '3/4',  'auto-6': '3/4'
+};
+
+// Image labels for prompt output
+const IMG_LABELS = {
+  'ind-1': 'Industrial #1 (CAD Render Hero)',
+  'ind-2': 'Industrial #2 (Bracket Assembly)',
+  'ind-3': 'Industrial #3 (Cone Structure)',
+  'def-1': 'Defense #1 (Secure Space)',
+  'def-2': 'Defense #2 (Tactical Storage)',
+  'def-3': 'Defense #3 (Ballistic Shield)',
+  'def-4': 'Defense #4 (Modular Shelter Feature)',
+  'def-5': 'Defense #5 (CAD Mesh)',
+  'def-6': 'Defense #6 (Wireframe Blueprint)',
+  'def-7': 'Defense #7 (Modular Unit)',
+  'auto-1': 'Automotive #1 (Chevrolet SS)',
+  'auto-2': 'Automotive #2 (Torch Work)',
+  'auto-3': 'Automotive #3 (Motorcycle)',
+  'auto-4': 'Automotive #4 (Sport Bike)',
+  'auto-5': 'Automotive #5 (Cylinder Inspection)',
+  'auto-6': 'Automotive #6 (Engine Teardown)'
+};
+
+const DEFAULTS = {
+  bg:'#000000', accent:'#ED9900', text:'#FFFFFF', muted:'#777777',
+  surface:'#111111', dim:'#0a0a0a', subtle:'#444444',
+  heroSize:'5', sectionSize:'3.5', bodySize:'0.95', tagSize:'0.7', cardSize:'1.8',
+  secPad:'5', maxW:'1280', galGap:'2',
+  indLayout:'2col', indGap:'2',
+  defLayout:'3top-feat-3bot', defCols:'3', defGap:'2',
+  autoLayout:'3col', autoCols:'3', autoGap:'2',
+  ruleW:'48', ruleH:'3', cardBdr:'2'
+};
+
+// Per-image W/H state keys (e.g. ind1W, ind1H)
+const imgState = {};
+Object.entries(IMG_DEFAULTS).forEach(([id, ratio]) => {
+  const [w, h] = ratio.split('/');
+  const key = id.replace('-','');
+  imgState[key+'W'] = w;
+  imgState[key+'H'] = h;
+});
+
+const PRESETS = {
+  default: {...DEFAULTS},
+  warmSteel: {
+    ...DEFAULTS, bg:'#0c0a07', accent:'#D4860A', text:'#F0E8DC',
+    muted:'#8A7D6B', surface:'#1a1610', dim:'#0f0d09', subtle:'#4a4236'
+  },
+  coldForge: {
+    ...DEFAULTS, bg:'#020508', accent:'#4A9EBF', text:'#E0EAF0',
+    muted:'#607888', surface:'#0a1218', dim:'#040810', subtle:'#2a3a48'
+  },
+  ember: {
+    ...DEFAULTS, bg:'#0a0404', accent:'#E04A1F', text:'#FFF0EC',
+    muted:'#886055', surface:'#160a08', dim:'#0c0505', subtle:'#4a2820'
+  },
+  midnight: {
+    ...DEFAULTS, bg:'#08081A', accent:'#9B7DFF', text:'#E8E6F0',
+    muted:'#706B88', surface:'#12122a', dim:'#0a0a1e', subtle:'#3a3858'
+  }
+};
+
+let state = {...DEFAULTS, ...imgState};
+let iframeReady = false;
+
+const iframe = document.getElementById('site-frame');
+iframe.addEventListener('load', function() {
+  iframeReady = true;
+  injectStyles();
+});
+
+function set(key, val) {
+  state[key] = val;
+  const vEl = document.getElementById('v-'+key);
+  if(vEl) vEl.textContent = val;
+  injectStyles();
+  updatePrompt();
+}
+
+function setImgRatio(imgId, wKey, hKey, newW, newH) {
+  if(newW !== null) {
+    state[wKey] = newW;
+    const v = document.getElementById('v-'+wKey);
+    if(v) v.textContent = newW;
+  }
+  if(newH !== null) {
+    state[hKey] = newH;
+    const v = document.getElementById('v-'+hKey);
+    if(v) v.textContent = newH;
+  }
+  injectStyles();
+  updatePrompt();
+}
+
+function quickRatio(imgId, wKey, hKey, w, h) {
+  setImgRatio(imgId, wKey, hKey, String(w), String(h));
+  const rW = document.getElementById('r-'+wKey);
+  const rH = document.getElementById('r-'+hKey);
+  if(rW) rW.value = w;
+  if(rH) rH.value = h;
+}
+
+function applyPreset(name) {
+  state = {...PRESETS[name], ...imgState};
+  // Reset all image ratios to defaults
+  Object.entries(IMG_DEFAULTS).forEach(([id, ratio]) => {
+    const [w, h] = ratio.split('/');
+    const key = id.replace('-','');
+    state[key+'W'] = w;
+    state[key+'H'] = h;
+  });
+  syncControls();
+  injectStyles();
+  updatePrompt();
+  document.querySelectorAll('.preset-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[onclick="applyPreset('${name}')"]`)?.classList.add('active');
+}
+
+function syncControls() {
+  // Color pickers
+  ['bg','accent','text','muted','surface','dim','subtle'].forEach(k => {
+    const c = document.getElementById('c-'+k);
+    const v = document.getElementById('v-'+k);
+    if(c) c.value = state[k];
+    if(v) v.textContent = state[k];
+  });
+  // Sliders
+  ['heroSize','sectionSize','bodySize','tagSize','cardSize','secPad','maxW','galGap','ruleW','ruleH','cardBdr'].forEach(k => {
+    const r = document.getElementById('r-'+k);
+    const v = document.getElementById('v-'+k);
+    if(r) r.value = state[k];
+    if(v) v.textContent = state[k];
+  });
+  // Per-image W/H sliders
+  Object.keys(IMG_DEFAULTS).forEach(id => {
+    const key = id.replace('-','');
+    ['W','H'].forEach(dim => {
+      const k = key + dim;
+      const r = document.getElementById('r-'+k);
+      const v = document.getElementById('v-'+k);
+      if(r) r.value = state[k];
+      if(v) v.textContent = state[k];
+    });
+  });
+  // Column + gap sliders
+  ['defCols','autoCols','indGap','defGap','autoGap'].forEach(k => {
+    const r = document.getElementById('r-'+k);
+    const v = document.getElementById('v-'+k);
+    if(r) r.value = state[k];
+    if(v) v.textContent = state[k];
+  });
+  // Layout selects
+  ['indLayout','defLayout','autoLayout'].forEach(k => {
+    const el = document.getElementById('s-'+k);
+    if(el) el.value = state[k];
+  });
+}
+
+function injectStyles() {
+  if(!iframeReady) return;
+  let doc;
+  try {
+    doc = iframe.contentDocument || iframe.contentWindow.document;
+    doc.head;
+  } catch(e) {
+    document.getElementById('prompt-output').textContent =
+      'Cannot access iframe (cross-origin). Try opening this file via a local server:\n  npx serve . \nthen visit http://localhost:3000/design-playground.html';
+    return;
+  }
+
+  let styleEl = doc.getElementById('playground-overrides');
+  if(!styleEl) {
+    styleEl = doc.createElement('style');
+    styleEl.id = 'playground-overrides';
+    doc.head.appendChild(styleEl);
+  }
+
+  const s = state;
+  const borderRgba = hexToRgba(s.text, 0.08);
+
+  // Build per-image CSS rules
+  let imgCss = '';
+  Object.keys(IMG_DEFAULTS).forEach(id => {
+    const key = id.replace('-','');
+    const w = s[key+'W'];
+    const h = s[key+'H'];
+    imgCss += `#${id} { aspect-ratio: ${w}/${h} !important; }\n    `;
+  });
+
+  styleEl.textContent = `
+    :root {
+      --black: ${s.bg} !important;
+      --orange: ${s.accent} !important;
+      --white: ${s.text} !important;
+      --muted: ${s.muted} !important;
+      --surface: ${s.surface} !important;
+      --dim: ${s.dim} !important;
+      --subtle: ${s.subtle} !important;
+      --border: ${borderRgba} !important;
+      --max: ${s.maxW}px !important;
+    }
+
+    body { background: ${s.bg} !important; color: ${s.text} !important; }
+    #navbar { background: ${s.bg} !important; }
+
+    .hero-title { font-size: clamp(3.5rem, 10vw, ${s.heroSize}rem) !important; }
+    .hero-title em { color: ${s.accent} !important; }
+    .section-title { font-size: clamp(2.5rem, 6vw, ${s.sectionSize}rem) !important; }
+
+    .hero-body, .pv-body, .serve-text, .why-list li, .process-text,
+    .cap-desc, .section-sub, .hero-sub, .about-text,
+    .contact-detail a, .contact-detail span {
+      font-size: ${s.bodySize}rem !important;
+    }
+
+    .section-tag, .cap-tag, .hero-eyebrow, .serve-label,
+    .contact-detail-label, .form-field label {
+      font-size: ${s.tagSize}rem !important;
+    }
+
+    .cap-title { font-size: ${s.cardSize}rem !important; }
+
+    .section-block { padding-block: clamp(${Math.max(2, s.secPad - 2)}rem, 10vw, ${s.secPad}rem) !important; }
+    .about-block { padding-block: clamp(${Math.max(2, s.secPad - 2)}rem, 8vw, ${Math.max(3, s.secPad - 1)}rem) !important; }
+
+    .gallery { gap: ${s.galGap}px !important; }
+
+    /* Industrial layout */
+    .gallery-industrial {
+      gap: ${s.indGap}px !important;
+      ${(() => {
+        switch(s.indLayout) {
+          case '1col': return 'grid-template-columns: 1fr !important;';
+          case '3col': return 'grid-template-columns: repeat(3, 1fr) !important;';
+          case '2col-equal': return 'grid-template-columns: 1fr 1fr !important;';
+          case 'featured-left': return 'grid-template-columns: 2fr 1fr !important; grid-template-rows: 1fr 1fr !important;';
+          case 'featured-right': return 'grid-template-columns: 1fr 2fr !important; grid-template-rows: 1fr 1fr !important;';
+          default: return 'grid-template-columns: 1fr 1fr !important;';
+        }
+      })()}
+    }
+    .gallery-industrial .img-hero {
+      ${(() => {
+        switch(s.indLayout) {
+          case '1col': return 'grid-column: 1 !important;';
+          case '3col': return 'grid-column: auto !important;';
+          case '2col-equal': return 'grid-column: auto !important;';
+          case 'featured-left': return 'grid-column: 1 !important; grid-row: 1 / -1 !important;';
+          case 'featured-right': return 'grid-column: 2 !important; grid-row: 1 / -1 !important;';
+          default: return 'grid-column: 1 / -1 !important;';
+        }
+      })()}
+    }
+    ${s.indLayout === 'featured-left' ? '.gallery-industrial .img-sub { grid-column: 2 !important; }' : ''}
+    ${s.indLayout === 'featured-right' ? '.gallery-industrial .img-sub { grid-column: 1 !important; }' : ''}
+
+    /* Defense layout */
+    .gallery-defense {
+      gap: ${s.defGap}px !important;
+      grid-template-columns: repeat(${s.defCols}, 1fr) !important;
+    }
+    .gallery-defense .img-feature {
+      ${s.defLayout === 'grid-only' ? 'grid-column: auto !important;' : 'grid-column: 1 / -1 !important;'}
+      ${s.defLayout === 'feat-top' ? 'order: -1 !important;' : ''}
+    }
+
+    /* Automotive layout */
+    .gallery-auto {
+      gap: ${s.autoGap}px !important;
+      ${(() => {
+        switch(s.autoLayout) {
+          case '1col': return 'grid-template-columns: 1fr !important;';
+          case '2col': return 'grid-template-columns: 1fr 1fr !important;';
+          case '2-top-1-bot': return 'grid-template-columns: 1fr 1fr !important;';
+          case 'hero-grid': return 'grid-template-columns: 2fr 1fr 1fr !important;';
+          case 'masonry-2col': return 'grid-template-columns: 1fr 1fr !important;';
+          default: return `grid-template-columns: repeat(${s.autoCols}, 1fr) !important;`;
+        }
+      })()}
+    }
+    ${s.autoLayout === 'hero-grid' ? '#auto-1 { grid-row: 1 / 3 !important; }' : ''}
+    ${s.autoLayout === '2-top-1-bot' ? '#auto-3, #auto-6 { grid-column: 1 / -1 !important; }' : ''}
+
+    /* Per-image aspect ratios */
+    ${imgCss}
+
+    .orange-rule { width: ${s.ruleW}px !important; height: ${s.ruleH}px !important; background: ${s.accent} !important; }
+    .cap-card { border-top-width: ${s.cardBdr}px !important; }
+
+    .orange-rule, .nav-cta, .btn-primary, .hero-eyebrow::before { background: ${s.accent} !important; }
+    .section-tag, .cap-link, .hero-eyebrow, .serve-label, .process-num { color: ${s.accent} !important; }
+    .nav-cta, .btn-primary { color: ${s.bg} !important; }
+    .cap-card:hover { border-top-color: ${s.accent} !important; }
+    .why-list li::before { background: ${s.accent} !important; }
+    .serve-block { border-left-color: ${s.accent} !important; background: ${hexToRgba(s.accent, 0.04)} !important; }
+
+    .cards-strip, .section-block.alt, #contact .section-block, .pv-contact { background: ${s.dim} !important; }
+    .cap-card { background: ${s.bg} !important; }
+    .cap-card:hover { background: ${s.surface} !important; }
+    footer { background: ${s.bg} !important; }
+
+    .hero-sub, .section-sub, .hero-body, .cap-desc, .serve-text,
+    .why-list li, .process-text, .about-text, .contact-detail a,
+    .contact-detail span, .form-field input, .form-field textarea {
+      color: ${s.muted} !important;
+    }
+    .cap-tag, .contact-detail-label, .footer-nav a, .footer-copy { color: ${s.subtle} !important; }
+    .nav-links a { color: ${s.muted} !important; }
+    .hero-title, .section-title, .cap-title, .nav-wordmark,
+    .footer-brand, h3 { color: ${s.text} !important; }
+    .process-text strong { color: ${s.text} !important; }
+
+    .form-field input, .form-field textarea { border-bottom-color: ${s.subtle} !important; }
+    .form-field input:focus, .form-field textarea:focus { border-bottom-color: ${s.accent} !important; }
+  `;
+}
+
+function updatePrompt() {
+  const s = state;
+  const d = {...DEFAULTS, ...imgState};
+  const parts = [];
+
+  const colorChanges = [];
+  if(s.bg !== d.bg) colorChanges.push(`--black (background) to ${s.bg}`);
+  if(s.accent !== d.accent) colorChanges.push(`--orange (accent) to ${s.accent}`);
+  if(s.text !== d.text) colorChanges.push(`--white (text) to ${s.text}`);
+  if(s.muted !== d.muted) colorChanges.push(`--muted to ${s.muted}`);
+  if(s.surface !== d.surface) colorChanges.push(`--surface to ${s.surface}`);
+  if(s.dim !== d.dim) colorChanges.push(`--dim to ${s.dim}`);
+  if(s.subtle !== d.subtle) colorChanges.push(`--subtle to ${s.subtle}`);
+  if(colorChanges.length) parts.push('Update CSS variables:\n  ' + colorChanges.join('\n  '));
+
+  const typo = [];
+  if(s.heroSize !== d.heroSize) typo.push(`hero title max size to ${s.heroSize}rem`);
+  if(s.sectionSize !== d.sectionSize) typo.push(`section title max size to ${s.sectionSize}rem`);
+  if(s.bodySize !== d.bodySize) typo.push(`body/description text to ${s.bodySize}rem`);
+  if(s.tagSize !== d.tagSize) typo.push(`section tags to ${s.tagSize}rem`);
+  if(s.cardSize !== d.cardSize) typo.push(`capability card titles to ${s.cardSize}rem`);
+  if(typo.length) parts.push('Typography changes:\n  ' + typo.join('\n  '));
+
+  const space = [];
+  if(s.secPad !== d.secPad) space.push(`section padding to ${s.secPad}rem`);
+  if(s.maxW !== d.maxW) space.push(`container max-width to ${s.maxW}px`);
+  if(s.galGap !== d.galGap) space.push(`gallery gap to ${s.galGap}px`);
+  if(space.length) parts.push('Spacing:\n  ' + space.join('\n  '));
+
+  // Per-image changes
+  const imgChanges = [];
+  Object.entries(IMG_DEFAULTS).forEach(([id, defRatio]) => {
+    const [dw, dh] = defRatio.split('/');
+    const key = id.replace('-','');
+    const cw = s[key+'W'];
+    const ch = s[key+'H'];
+    if(cw !== dw || ch !== dh) {
+      imgChanges.push(`${IMG_LABELS[id]}: ${cw}/${ch}`);
+    }
+  });
+  if(s.indLayout !== d.indLayout) imgChanges.push(`Industrial layout: ${s.indLayout}`);
+  if(s.indGap !== d.indGap) imgChanges.push(`Industrial gap: ${s.indGap}px`);
+  if(s.defLayout !== d.defLayout) imgChanges.push(`Defense layout: ${s.defLayout}`);
+  if(s.defCols !== d.defCols) imgChanges.push(`Defense columns: ${s.defCols}`);
+  if(s.defGap !== d.defGap) imgChanges.push(`Defense gap: ${s.defGap}px`);
+  if(s.autoLayout !== d.autoLayout) imgChanges.push(`Automotive layout: ${s.autoLayout}`);
+  if(s.autoCols !== d.autoCols) imgChanges.push(`Automotive columns: ${s.autoCols}`);
+  if(s.autoGap !== d.autoGap) imgChanges.push(`Automotive gap: ${s.autoGap}px`);
+  if(imgChanges.length) parts.push('Image sizing:\n  ' + imgChanges.join('\n  '));
+
+  const fx = [];
+  if(s.ruleW !== d.ruleW) fx.push(`accent rule width to ${s.ruleW}px`);
+  if(s.ruleH !== d.ruleH) fx.push(`accent rule height to ${s.ruleH}px`);
+  if(s.cardBdr !== d.cardBdr) fx.push(`card hover border to ${s.cardBdr}px`);
+  if(fx.length) parts.push('Effects:\n  ' + fx.join('\n  '));
+
+  const out = document.getElementById('prompt-output');
+  if(parts.length === 0) {
+    out.textContent = 'Using default settings. Adjust controls to generate a design prompt.';
+  } else {
+    out.textContent = `Update the Kazimoto Engineering website (index.html) with these design changes:\n\n${parts.join('\n\n')}\n\nApply to the :root CSS variables and relevant selectors in index.html.`;
+  }
+}
+
+function copyPrompt() {
+  const text = document.getElementById('prompt-output').textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy Prompt', 1500);
+  });
+}
+
+function hexToRgba(hex, alpha) {
+  const h = hex.replace('#','');
+  const r = parseInt(h.slice(0,2),16);
+  const g = parseInt(h.slice(2,4),16);
+  const b = parseInt(h.slice(4,6),16);
+  return `rgba(${r},${g},${b},${alpha})`;
+}
+</script>
+
+</body>
+</html>

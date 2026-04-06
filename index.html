@@ -462,25 +462,36 @@
     }
     .gallery-industrial .img-hero {
       grid-column: 1 / -1;
-      aspect-ratio: 16/9;
     }
-    .gallery-industrial .img-sub { aspect-ratio: 16/10; }
+    #ind-1 { aspect-ratio: 1/1; }
+    #ind-2 { aspect-ratio: 1/1; }
+    #ind-3 { aspect-ratio: 1/1; }
 
-    /* Defense: top row 3, feature strip, bottom row 3 */
+    /* Defense: feature on top + 2-col grid */
     .gallery-defense {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
     }
     .gallery-defense img { aspect-ratio: 4/3; }
     .gallery-defense .img-feature {
       grid-column: 1 / -1;
       aspect-ratio: 21/9;
+      order: -1;
     }
+    #def-2 { aspect-ratio: 3/2; }
+    #def-3 { aspect-ratio: 5/4; }
+    #def-5 { aspect-ratio: 2/3; }
+    #def-6 { aspect-ratio: 4/4; }
+    #def-7 { aspect-ratio: 3/4; }
 
-    /* Automotive: 3-col grid, all portrait */
+    /* Automotive: 2-top + 1 wide bottom pattern */
     .gallery-auto {
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr 1fr;
     }
     .gallery-auto img { aspect-ratio: 3/4; }
+    #auto-3, #auto-6 { grid-column: 1 / -1; }
+    #auto-1 { aspect-ratio: 2/3; }
+    #auto-2 { aspect-ratio: 9/16; }
+    #auto-6 { aspect-ratio: 4/3; }
 
     @media (max-width: 768px) {
       .gallery-industrial { grid-template-columns: 1fr; }
@@ -488,10 +499,12 @@
       .gallery-defense { grid-template-columns: 1fr 1fr; }
       .gallery-defense .img-feature { grid-column: 1 / -1; }
       .gallery-auto { grid-template-columns: 1fr 1fr; }
+      #auto-3, #auto-6 { grid-column: 1 / -1; }
     }
     @media (max-width: 480px) {
       .gallery-defense, .gallery-auto { grid-template-columns: 1fr; }
       .gallery-defense .img-feature { grid-column: 1; aspect-ratio: 16/9; }
+      #auto-3, #auto-6 { grid-column: 1; }
     }
 
     /* ─── PROCESS ─── */
@@ -865,9 +878,9 @@
 
           <div>
             <div class="gallery gallery-industrial" aria-label="Industrial design project gallery">
-              <img src="images/gallery2/IMG_5889.jpg" alt="3D CAD render — precision machined component with dimensional callouts" width="800" height="450" loading="lazy" class="img-hero" />
-              <img src="images/gallery2/IMG_5890.jpg" alt="3D CAD model — mechanical bracket assembly" width="400" height="250" loading="lazy" class="img-sub" />
-              <img src="images/gallery2/IMG_5891.jpg" alt="3D CAD visualization — cone structure with support framework" width="400" height="250" loading="lazy" class="img-sub" />
+              <img id="ind-1" src="images/gallery2/IMG_5889.jpg" alt="3D CAD render — precision machined component with dimensional callouts" width="800" height="450" loading="lazy" class="img-hero" />
+              <img id="ind-2" src="images/gallery2/IMG_5890.jpg" alt="3D CAD model — mechanical bracket assembly" width="400" height="250" loading="lazy" class="img-sub" />
+              <img id="ind-3" src="images/gallery2/IMG_5891.jpg" alt="3D CAD visualization — cone structure with support framework" width="400" height="250" loading="lazy" class="img-sub" />
             </div>
           </div>
         </div>
@@ -905,13 +918,13 @@
         <div class="split split-reverse reveal">
           <div>
             <div class="gallery gallery-defense" aria-label="Defense solutions project gallery">
-              <img src="images/gallery3/IMG_5892.jpg" alt="Secure space interior — architectural render"      width="600" height="450" loading="lazy" />
-              <img src="images/gallery3/IMG_5893.jpg" alt="Tactical storage facility — interior render"       width="600" height="450" loading="lazy" />
-              <img src="images/gallery3/IMG_5895.jpg" alt="Ballistic shield — product shot"                   width="600" height="450" loading="lazy" />
-              <img src="images/gallery3/IMG_5894.jpg" alt="Modular shelter interior — prototype with lighting" width="900" height="386" loading="lazy" class="img-feature" />
-              <img src="images/gallery3/IMG_5897.jpg" alt="Ballistic shield — CAD mesh model"                 width="600" height="450" loading="lazy" />
-              <img src="images/gallery3/IMG_5896.jpg" alt="Defense system — CAD wireframe blueprint"          width="600" height="450" loading="lazy" />
-              <img src="images/gallery3/IMG_5898.jpg" alt="Modular unit — wireframe visualization"            width="600" height="450" loading="lazy" />
+              <img id="def-1" src="images/gallery3/IMG_5892.jpg" alt="Secure space interior — architectural render"      width="600" height="450" loading="lazy" />
+              <img id="def-2" src="images/gallery3/IMG_5893.jpg" alt="Tactical storage facility — interior render"       width="600" height="450" loading="lazy" />
+              <img id="def-3" src="images/gallery3/IMG_5895.jpg" alt="Ballistic shield — product shot"                   width="600" height="450" loading="lazy" />
+              <img id="def-4" src="images/gallery3/IMG_5894.jpg" alt="Modular shelter interior — prototype with lighting" width="900" height="386" loading="lazy" class="img-feature" />
+              <img id="def-5" src="images/gallery3/IMG_5897.jpg" alt="Ballistic shield — CAD mesh model"                 width="600" height="450" loading="lazy" />
+              <img id="def-6" src="images/gallery3/IMG_5896.jpg" alt="Defense system — CAD wireframe blueprint"          width="600" height="450" loading="lazy" />
+              <img id="def-7" src="images/gallery3/IMG_5898.jpg" alt="Modular unit — wireframe visualization"            width="600" height="450" loading="lazy" />
             </div>
           </div>
 
@@ -1006,12 +1019,12 @@
 
           <div>
             <div class="gallery gallery-auto" aria-label="Automotive services project gallery">
-              <img src="images/gallery4/IMG_5883.jpg" alt="Classic Chevrolet SS on lift"         width="450" height="600" loading="lazy" />
-              <img src="images/gallery4/IMG_5885.jpg" alt="Torch work on engine block"           width="450" height="600" loading="lazy" />
-              <img src="images/gallery4/IMG_5775.jpg" alt="Street motorcycle in lot"             width="450" height="600" loading="lazy" />
-              <img src="images/gallery4/IMG_5878.jpg" alt="Sport bike on trailer ramp"           width="450" height="600" loading="lazy" />
-              <img src="images/gallery4/IMG_5882.jpg" alt="Engine block — cylinder inspection"   width="450" height="600" loading="lazy" />
-              <img src="images/gallery4/IMG_5881.jpg" alt="Engine teardown in progress"          width="450" height="600" loading="lazy" />
+              <img id="auto-1" src="images/gallery4/IMG_5883.jpg" alt="Classic Chevrolet SS on lift"         width="450" height="600" loading="lazy" />
+              <img id="auto-2" src="images/gallery4/IMG_5885.jpg" alt="Torch work on engine block"           width="450" height="600" loading="lazy" />
+              <img id="auto-3" src="images/gallery4/IMG_5775.jpg" alt="Street motorcycle in lot"             width="450" height="600" loading="lazy" />
+              <img id="auto-4" src="images/gallery4/IMG_5878.jpg" alt="Sport bike on trailer ramp"           width="450" height="600" loading="lazy" />
+              <img id="auto-5" src="images/gallery4/IMG_5882.jpg" alt="Engine block — cylinder inspection"   width="450" height="600" loading="lazy" />
+              <img id="auto-6" src="images/gallery4/IMG_5881.jpg" alt="Engine teardown in progress"          width="450" height="600" loading="lazy" />
             </div>
           </div>
         </div>
